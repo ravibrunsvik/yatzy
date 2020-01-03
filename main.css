@@ -1,0 +1,111 @@
+/* * {
+  margin: 0px; 
+  padding: 0px;
+} */
+
+body {
+  background: rgb(158, 158, 157);
+}
+
+/* #gameboard {
+  display: grid;
+  justify-items: center;
+  grid-template-areas:
+  'itemNames playerNames'
+  'itemNames playerList';
+} */
+
+
+.mainBoard {
+  background-color: gray;
+}
+
+
+li {
+  list-style-type: none;
+  width: 50px;
+  height: 40px;
+}
+
+.itemList li {
+  width: 150px;  
+}
+
+.playerList li {
+  text-align: center;
+}
+
+.playerList li, .itemList li {
+  list-style-type: none;
+  background: rgb(206, 205, 205);
+  /* margin: 0px 5px; */
+  border: 1px white solid;
+}
+
+.diceList {
+  display: inline-block;
+}
+
+.dice {
+  height: 40px;
+  width: 40px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0px 0px 5px 1px grey;
+
+}
+
+.dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: black;
+  margin: 2px;
+}
+
+.one-face, .two-face, .three-face, .four-face, .five-face, .six-face {
+  display: flex;
+}
+
+.one-face {
+  justify-content: center;
+  align-items: center;
+}
+
+.two-face, .four-face, .six-face {
+  justify-content: space-between;
+}
+
+
+.two-face .dot:last-child, .three-face .dot:last-child, .five-face .dot:last-child, .six-face .dot:last-child {
+  /* margin: 2px; */
+  align-self: flex-end;
+}
+
+
+.three-face .dot:nth-child(2) {
+  align-self: center;
+}
+
+.four-face .dot:nth-child(2) {
+  justify-self: flex-start;
+  align-self: flex-end;
+}
+
+
+.four-face {
+  flex-direction: column;
+}
+
+.five-face {
+
+}
+
+.six-face {
+
+}
+
+.selected {
+  background: rgb(233, 233, 128);
+}

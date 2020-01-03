@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" integrity="sha256-ECB9bbROLGm8wOoEbHcHRxlHgzGqYpDtNTgDTyDz0wg=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Yatzy</h1>
+      <div class="row">
+        <div>
+          <form id="playerform">
+            <label for="name">Choose name</label>
+            <input type="text" name="name" id="name">
+            <input type="submit" value="Choose" class="" id="submit">
+            <input type="button" value="Start game" class="button-primary" id="start" style="display: none;">
+          </form>
+        </div>
+      </div>
+      <div class="row mainBoard" style="display: none;">
+
+        <div class="gameboard four columns" id="gameboard">
+          <div class="itemNames">
+            
+            <ul class="itemList">
+              <h6>#</h6>
+              <li>Ones</li>
+              <li>Twos</li>
+              <li>Threes</li>
+              <li>Fours</li>
+              <li>Fives</li>
+              <li>Sixes</li>
+              <li>Bonus</li>
+              <li>One pair</li>
+              <li>Two pairs</li>
+              <li>Three of a kind</li>
+              <li>Four of a kind</li>
+              <li>House</li>
+              <li>Chance</li>
+              <li>Yatzy</li>
+              <li>Sum</li>
+            </ul>
+          </div>
+        </div>
+          <div class="playerNames eight columns">
+            <div class="row" id="playerInsert">
+        </div>
+      </div>
+      <button id="throw" class="button-primary" disabled>Throw</button>
+      <button id="endTurn">End turn</button>
+    </div>
+
+           <div class="output"> 
+            <ul class="diceList">
+              <li class="dice"></li>
+              <li class="dice"></li>
+              <li class="dice"></li>
+              <li class="dice"></li>
+              <li class="dice"></li>
+            </ul>
+          </div>
+  <script src="app.js"></script>
+</body>
+</html>
