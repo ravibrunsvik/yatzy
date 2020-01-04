@@ -31,7 +31,10 @@ const players = [];
 // List of boards
 const currentBoards = [];
 // list of dice
-let dice = document.querySelectorAll(".dice");
+
+// buttons
+const throwButton = document.getElementById("throw"),
+      endTurnBtn = document.getElementById("endTurn");
 
 
 // let testHand = {
@@ -242,7 +245,7 @@ isChance(field) {
 
 runConditions(hand) {
   const value = this.hasMoreThanOne(hand),
-        pair = this.isAPair(hand),
+        onePair = this.isAPair(hand),
         twoPair = this.isTwoPairs(hand),
         threeKind = this.isThreeKind(hand),
         fourKind = this.isFourKind(hand),
@@ -253,7 +256,7 @@ runConditions(hand) {
 
   let objectWithConditions = {
     value: value,
-    pair: pair,
+    onePair: onePair,
     twoPair: twoPair,
     threeKind: threeKind,
     fourKind: fourKind,
@@ -293,6 +296,7 @@ class Player {
   // first turn
   firstTurn() {
     console.log(this);
+    let dice = document.querySelectorAll(".dice:not(.selected)");
     
     // remove event listener
     throwButton.removeEventListener("click", initTurn);
@@ -304,25 +308,22 @@ class Player {
       dice[entry].innerHTML = this.hand[entry];
     }
     // event listener to jump to second turn
-    throwButton.addEventListener("click", this.secondTurn.bind(this));
-
+    throwButton.addEventListener("click", this.secondTurn.bind(this), {once: true});
+    endTurnBtn.addEventListener("click", this.setScoreInGameBoard.bind(this), {once: true})
 
   }
 
   secondTurn() {
-    throwButton.removeEventListener("click", this.secondTurn.bind(this));
-
+    let dice = document.querySelectorAll(".dice:not(.selected)");
     // create array from selected item
+
     let selected = document.querySelectorAll(".selected");
     let savedDice = [];
     selected.forEach(item => savedDice.push(Number(item.innerHTML)));
-    console.log(savedDice);
-    console.log(this);
     // throw remaining dice
     // combine arrays
+    // DICE LOSING POSITION, need fix
     this.hand = savedDice.concat(this.throwDie(5 - savedDice.length))
-
-    console.log(this.hand);
     // add event listener for array
     for (let entry in this.hand) {
       dice[entry].removeEventListener("click", this.holdOnToDie);
@@ -330,51 +331,88 @@ class Player {
       dice[entry].innerHTML = this.hand[entry];
     }
 
-    throwButton.addEventListener("click", this.thirdTurn.bind(this));
+    throwButton.addEventListener("click", this.thirdTurn.bind(this), {once: true});
   }
   
   thirdTurn() {
-    throwButton.removeEventListener("click", this.thirdTurn.bind(this));
+    let dice = document.querySelectorAll(".dice:not(.selected)");
+    
+    throwButton.classList.remove("button-primary");
+    throwButton.setAttribute("disabled", "");
+    endTurnBtn.classList.add("button-primary");
 
+    
   }
   holdOnToDie(e) {
     if (!e.target.classList.contains("selected")) {
       e.target.classList.add("selected");
     } else e.target.classList.remove("selected")
-  }
-  // Initialize turn
-  takeTurn(dicesSaved = 0, turnsLeft = 3) {
-    // throw dice
-    const hand = this.throwDie(5 - dicesSaved);
-    // If there are turns left
-    if (turnsLeft !== 0) {
-      return hand, turnsLeft--
-    }
-    // if there are no turns, add to scoreBoard
-    if (turnsLeft === 0) {
-      this.setScoreInGameBoard(hand);
-    }
-  }
-
-  // hold a die
-  holdDie(savedDice, turnsLeft) {
-    // Set aside dice to new array
-    // hold on to dice that are in saved arr
-    // return array of next hand and throw amount of dice left
-    const diceToBeDiscarded = (5 - savedDice.length)
-    const handForNextTurn = [savedDice, diceToBeDiscarded]
-
-      return handForNextTurn, turnsLeft;
-  }
-
+  } 
   
   // Put score in gameboard
-  setScoreInGameBoard(choices, hand, position) {
-    console.log(hand + " is final hand");
-    console.log(choices);
+  setScoreInGameBoard() {
+    // document.removeEventListener()
+    // set final hand
+    let finalHand = this.getFinalHand(this.hand);
 
+    let options = this.calculateAvailableValues(this.gameBoard, finalHand)
+    console.log(options);
+
+    // get elements for current player
+    let elements = document.querySelectorAll(`.${this.playerName}`);
+
+    // add listener for inputting single dice
+    for (let option of options.value) {
+      elements.forEach(el => {
+        if (el.classList.contains(option.die)) {
+          el.addEventListener("click", this.insertValue.bind({player: this, el: el, value: option.amount, dice: option.die}))
+        }
+      })  
+    }
+    // other options
+    for (let option in options) {
+      if (options[option] === false) {
+        continue;
+      }
+      if (option === "value") {
+        continue;
+      }
+      // if element matches option
+      elements.forEach(el => {
+        el.classList.contains(option) ? el.addEventListener("click", this.insertValue.bind({player: this, el: el, key: option, value: options[option]})) : ''
+      })
+      console.log(option);
+      console.log(options[option]);
+    }
   }
-  
+
+  // insertValue of single dice, pair, 3kind, 4kind, yatzy
+  insertValue() {
+
+    console.log(this);
+    console.log(this.key);
+    console.log(typeof this.key);
+    console.log(this.value);
+    // set game board value
+    let value = this.el.classList[1];
+    console.log(value);
+    switch (value) {
+      case (1 || 2 || 3 || 4 || 5 || 6):
+        this.el.innerHTML = this.value * this.dice;
+        this.player.gameBoard[value] = this.value * this.dice;
+        break;
+      case ('onePair'):
+        // this.el.innerHTML = 
+        break;
+      case ('twoPair'):
+        break;  
+    }
+    // set board value in UI
+
+    // insert value into gameboard
+    // cleanup event listener
+    
+  }
   // Turn is over, decide where to put score
   getFinalHand(hand) {
     // Amount of each die
@@ -414,11 +452,12 @@ class Player {
 
   calculateAvailableValues(gameBoard, finalHand) {
       // Is field empty, and can be used for score?
+    let copyOfBoard = JSON.parse(JSON.stringify(gameBoard))
       for (let entry in gameBoard) {
         if (gameBoard[entry] === "") {
-          gameBoard[entry] = true
+          copyOfBoard[entry] = true
         } else {
-          gameBoard[entry] = false
+          copyOfBoard[entry] = false
         }
       }
       // Does field qualify for score?
@@ -426,20 +465,19 @@ class Player {
       const test = new Conditionals()
       // Available choices
       const choices = test.runConditions(finalHand);
-    
-      return choices, finalHand;
+      return choices
 
   }
 
   // instantiate gameboard
   gameBoard() {
     const gameBoard = {
-      ones: "",
-      twos: "",
-      threes: "",
-      fours: "",
-      fives: "",
-      sixes: "",
+      1: "",
+      2: "",
+      3: "",
+      4: "",
+      5: "",
+      6: "",
       bonus: false,
       onePair: "",
       twoPair: "",
@@ -486,17 +524,17 @@ function addPlayer(e) {
     DOMString = `<div class="playerList two columns">
     <h6>${name}</h6>
     <ul>
-    <li class="${name} ones"></li>
-    <li class="${name} twos"></li>
-    <li class="${name} threes"></li>
-    <li class="${name} fours"></li>
-    <li class="${name} fives"></li>
-    <li class="${name} sixes"></li>
+    <li class="${name} 1"></li>
+    <li class="${name} 2"></li>
+    <li class="${name} 3"></li>
+    <li class="${name} 4"></li>
+    <li class="${name} 5"></li>
+    <li class="${name} 6"></li>
     <li class="${name} bonus"></li>
-    <li class="${name} onepair"></li>
-    <li class="${name} twopair"></li>
-    <li class="${name} threekind"></li>
-    <li class="${name} fourkind"></li>
+    <li class="${name} onePair"></li>
+    <li class="${name} twoPair"></li>
+    <li class="${name} threeKind"></li>
+    <li class="${name} fourKind"></li>
     <li class="${name} house"></li>
     <li class="${name} chance"></li>
     <li class="${name} yatzy"></li>
@@ -517,7 +555,6 @@ function addPlayer(e) {
         // Show board when there are players
         board.removeAttribute("style");
       }
-const throwButton = document.getElementById("throw");
       
 // Start game
 function startGame() {
