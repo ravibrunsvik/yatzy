@@ -2,6 +2,9 @@
   margin: 0px; 
   padding: 0px;
 } */
+:root {
+  --list-selected: rgb(206, 206, 126);
+}
 
 body {
   background: rgb(158, 158, 157);
