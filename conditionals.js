@@ -182,7 +182,7 @@ isYatzy(hand) {
   for (let dice in hand) {
     let diceAmount = hand[dice];
     if (diceAmount === 5) {
-      return dice;
+      return (dice * 5) + 50;
     }
     
   }
@@ -222,4 +222,58 @@ runConditions(hand) {
   return objectWithConditions;
 }
 
+  eval(object, player) {
+    // Evaluate incoming object
+    let counter = 0,
+        key = object.key,
+        value = object.value
+
+
+    switch (key) {
+      case ('onePair'):
+        // iterate for each
+        // hold on to biggest die
+          for (let entry of value) {
+            entry.die > counter ? counter = entry.die : ''
+          }
+          return counter * 2
+      case ('twoPair'):
+        // combine dies
+        for (let entry of value) {
+          counter += entry.die
+        }
+        return counter * 2
+      case ('threeKind'):
+        for (let entry of value) {
+          counter = entry.die
+        }
+          return (counter * 3)
+      case ('fourKind'):
+        for (let entry of value) {
+          counter = entry.die
+        }
+          return counter * 4
+      case('yatzy'): 
+        for (let entry of value) {
+          counter = entry.die
+        }
+        return counter * 5
+      
+      case('tinyStraight'):
+        return 15;
+      case('bigStraight'):
+      return 20;
+
+      case('house'):
+        for (let entry of value) {
+          counter += Number(entry.die) * Number(entry.amount)
+        }
+        return counter;
+      case('chance'):
+        counter = player.hand.reduce((a, b) => a + b)
+        return counter;
+      default:
+        break;
+    }
+  }
 }

@@ -4,36 +4,6 @@
 // Turns can be ended before all throws are used
 // Players can pick where to store turn result
 // Turn passes in circle fashion between players (top to bottom of list and back to top)
-/*
- * conditional logic
-    1 > 0
-    2 > 0
-    3 > 0
-    4 > 0
-    5 > 0
-    6 > 0
-    sum(1,2,3,4,5,6) = 63
-    a >= 2 || b >= 2
-    a >= 2 && b >= 2
-    a >= 3
-    a >= 4
-    hand === [1, 2, 3, 4, 5]
-    hand === [2, 3, 4, 5, 6]
-    a === 3 && b === 2
-    chance: hand
-    a === 5
- *
-*/
-
-let testhand = {
-  1: 0,
-  2: 0,
-  3: 3,
-  4: 2,
-  5: 0,
-  6: 0
-}
-
 // UI Vars
 // List of players
 const players = [];
@@ -41,7 +11,6 @@ const players = [];
 const throwButton = document.getElementById("throw"),
 endTurnBtn = document.getElementById("endTurn");
       
-
 // Event listeners
 // Add player
 document.getElementById("playerform").addEventListener("submit", addPlayer)
@@ -65,29 +34,29 @@ function addPlayer(e) {
   // add player to game
   // max 6 players
   if (players.length !== 6) {
-    let player = new Player(name)
+    let player = new Player(name);
     players.push(player);
 
     // Add player rows to game sheet
     let insertDiv = document.getElementById("playerInsert"),
-    DOMString = `<div class="playerList two columns">
+    DOMString = `<div class="playerList two columns" id="${name}${players.length - 1}">
     <h6>${name}</h6>
     <ul>
-    <li class="${name} 1"></li>
-    <li class="${name} 2"></li>
-    <li class="${name} 3"></li>
-    <li class="${name} 4"></li>
-    <li class="${name} 5"></li>
-    <li class="${name} 6"></li>
-    <li class="${name} bonus"></li>
-    <li class="${name} onePair"></li>
-    <li class="${name} twoPair"></li>
-    <li class="${name} threeKind"></li>
-    <li class="${name} fourKind"></li>
-    <li class="${name} house"></li>
-    <li class="${name} chance"></li>
-    <li class="${name} yatzy"></li>
-    <li class="${name} sum"></li>
+    <li class="${name}${players.length - 1} 1"></li>
+    <li class="${name}${players.length - 1} 2"></li>
+    <li class="${name}${players.length - 1} 3"></li>
+    <li class="${name}${players.length - 1} 4"></li>
+    <li class="${name}${players.length - 1} 5"></li>
+    <li class="${name}${players.length - 1} 6"></li>
+    <li class="${name}${players.length - 1} bonus"></li>
+    <li class="${name}${players.length - 1} onePair"></li>
+    <li class="${name}${players.length - 1} twoPair"></li>
+    <li class="${name}${players.length - 1} threeKind"></li>
+    <li class="${name}${players.length - 1} fourKind"></li>
+    <li class="${name}${players.length - 1} house"></li>
+    <li class="${name}${players.length - 1} chance"></li>
+    <li class="${name}${players.length - 1} yatzy"></li>
+    <li class="${name}${players.length - 1} sum"></li>
     </ul>
     </div>`;
     
@@ -111,12 +80,12 @@ function startGame() {
 // enable throw button, pass to turn manager
 throwButton.removeAttribute("disabled");
 
-// give players a board
 for (i = 0; i < players.length; i++) {
   players[i].id = i
-    players[i].max = players.length
-  }
-  players.forEach(item => item.gameBoard());
+  players[i].max = players.length
+}
+  // give players a board
+  players.forEach(item => item.gameBoard = Gameboard.fiveDie())
   
 
   // remove player submit form
@@ -145,14 +114,21 @@ function turnManager(e, playerID = 0) {
 
       //Allow turn to end from here on 
       // end turn event
-      endTurnBtn.addEventListener('click', () => {
-      // remove eventlisteners on throwbutton
-      throwButton.removeEventListener('click', firstThrow, {once: true})
-      throwButton.removeEventListener('first', secondThrow, {once: true})
-      throwButton.removeEventListener('second', thirdThrow, {once: true})
-      // wait for player to insert values
-      currentPlayer.setScoreInGameBoard();
-      }, {once: true})
+      endTurnBtn.addEventListener('click', endButton)
+  }
+
+  function endButton() {
+    // remove eventlisteners on throwbutton
+    throwButton.removeEventListener('click', firstThrow, {once: true})
+    throwButton.removeEventListener('first', secondThrow, {once: true})
+    throwButton.removeEventListener('second', thirdThrow, {once: true})
+    
+    // UI show button as disabled
+    throwButton.setAttribute("disabled", "");
+    throwButton.classList.remove("button-primary");
+    // wait for player to insert values
+    currentPlayer.scoreRefactor();
+    endTurnBtn.removeEventListener('click', endButton)
   }
   
   // second throw
@@ -162,9 +138,11 @@ function turnManager(e, playerID = 0) {
   // third throw
   function thirdThrow(e) {
     currentPlayer.takeTurn(e, 3, 0);
-    throwBtn.setAttribute("disabled", "");
-    throwBtn.classList.remove("button-primary");
+    throwButton.setAttribute("disabled", "");
+    throwButton.classList.remove("button-primary");
     endTurnBtn.classList.add("button-primary");
+
+    currentPlayer.scoreRefactor();
   }
   // listen for throws
     throwButton.addEventListener('click', firstThrow, {once: true})
@@ -172,24 +150,29 @@ function turnManager(e, playerID = 0) {
     throwButton.addEventListener('second', thirdThrow, {once: true})
 
   // when turn ends
-  document.addEventListener("endofturn", () => {
-    // if game is not over, pass to next player
+  document.addEventListener("endofturn", endOfTurn, {once: true});
+
+  function endOfTurn(e) {
+    console.log(playerID);
+     // if game is not over, pass to next player
     if (isGameOver() === false) {
       // if player is final player, give turn back to first player
       playerID === (players.length-1) ? playerID = 0 : playerID++
+      console.log(e)
+      console.log(playerID)
       turnManager(e, playerID)
     } 
 
     if (isGameOver === true) {
       // end game functions here
     }
-  });
+  }
 
 }
   
 // IS GAME OVER?
 function isGameOver() {
-  document.removeEventListener("turnEnd", isGameOver);
+  document.removeEventListener("endofturn", isGameOver);
 
   console.log("gotcha")
   let state;

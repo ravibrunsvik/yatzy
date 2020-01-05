@@ -8,26 +8,7 @@ class Player {
     }
   }
 
-  
-  // Throw dice
-  // throwDie(numberOfDice = 5) {
-  //   // array to keep dice values
-  //   const hand = [];
-  //   // max and minimum values on dice
-  //   const max = 6,
-  //   min = 1;
-  //   // return amount of dice asked for
-  //   for (let i = 0; i < numberOfDice; i++) {
-  //   // random number between min and max values
-  //     hand.push(Math.floor(Math.random() * (max - min) + min))
-  //   }
-  //   return hand;
-  // }
-
-
-  // REFACTOR TURNS
   takeTurn(e, turnCount = 1, turnsLeft = 2) {
-    console.log(e.target);
     let UIdice = document.querySelectorAll(".dice"),
         UIselected = document.querySelectorAll(".selected"),
         dice = new Dice(),
@@ -35,8 +16,6 @@ class Player {
         event,
         previousHand,
         throwBtn = document.getElementById(e.target.id);
-
-        console.log(throwBtn);
 
     // Custom turn events
     function dispatchFirst() {
@@ -67,8 +46,11 @@ class Player {
     }
 
     // dice magic
+    // Save dice from last turn, add new dice in saved indexes.
     if (turnCount !== 1) {
-      UIselected.forEach(el => hand.push(el.innerHTML))
+
+      // UIselected.forEach(el => hand.push(el.innerHTML))
+      // indexed dice
       const diceAmount = {
         0: 0,
         1: 0,
@@ -76,7 +58,7 @@ class Player {
         3: 0,
         4: 0,
       }
-    // add saved dice to object
+    // add saved dice to indexed dice object
       UIselected.forEach(item => {
         let diceKey = item.classList[1];
           diceAmount[diceKey] = Number(item.innerHTML);
@@ -87,31 +69,33 @@ class Player {
   
       // add new values to unsaved dice
       for (let idx in diceAmount) {
+        // if dice has not been set aside
         if (diceAmount[idx] === 0) {
+        // copy from new hand
           diceAmount[idx] = hand[idx];
         }
+        // add to current hand 
         this.hand[idx] = diceAmount[idx];
       }
+      // update UI
       for (let idx in this.hand) {
         UIdice[idx].innerHTML = this.hand[idx];
       }
     }
+
     // what turn is it?
     if (turnCount === 2) {
       console.log("second")
-      
+      // cleanup event listeners
       throwBtn.addEventListener('click', dispatchSecond, {once: true})
       throwBtn.removeEventListener('click', dispatchFirst, {once: true})
     }
 
     if (turnCount === 3) {
       console.log("third")
+      // cleanup event listeners
       throwBtn.removeEventListener('click', dispatchSecond, {once: true})
-      
     }
-    // amount of dice to be thrown
-
-    // if dice exists, save selected
   }
   holdOnToDie(e) {
     if (!e.target.classList.contains("selected")) {
@@ -119,20 +103,133 @@ class Player {
     } else e.target.classList.remove("selected")
   } 
   
+  scoreRefactor() {
+    // final hand
+    const playerID = `${this.playerName}${this.id}`
+    const finalHand = this.getFinalHand(this.hand);
+    const currentBoard = this.gameBoard;
+    // available options
+    const options = this.calculateAvailableValues(currentBoard, finalHand);
+    // const elements = document.querySelectorAll(`.${playerID}`);
+    const parentElement = document.getElementById(playerID);
+    // add event listeners to each single value
+    for (let entry of options.value) {
+      // get single value die element
+      let element = document.querySelector(`[class$='${entry.die}']`);
+      // Squary is empty and can be filled in
+      if (element.innerHTML === "") {
+        element.style.background =  "var(--list-selected)"
+        element.classList.add("selected");
+      }
+      
+    }
+
+    // add event listeners to all other options
+    for (let entry in options) {
+    // Option is not available, continue
+      if (options[entry] === false) {
+        continue;
+      }
+      // Discard single value options
+      if (entry === "value") {
+        continue;
+      }
+      // All other options get event listener
+      let element = document.querySelector(`[class^="${playerID} ${entry}"]`)
+        if (element.innerHTML === "") {
+          element.style.background = "var(--list-selected)"
+          element.classList.add("selected");
+        }
+    }
+    // add event listener to parent element
+    /* validater creates reference to function
+      this preserves function binding and enables us to remove event listener */
+    const validater = validate.bind(this)
+    parentElement.addEventListener("click", validater);
+
+    function validate(e) {
+      console.log(this)
+      // Name of clicked element
+      const UIelementName = e.target.classList[1],
+            UIelement = e.target,
+            parentElement = e.target.parentElement.parentElement;
+
+      // If element clicked is not among candidates, try again
+      if (!UIelement.classList.contains("selected")) {
+        console.log("try again");
+        // TODO: add message to UI
+        return;
+      }
+      // Match name against option
+      // single value check
+      options.value.forEach(entry => {
+        if (entry.die.toString() === UIelementName) {
+          // add value to UI
+          UIelement.innerHTML = entry.die * entry.amount;
+          // add value to gameboard
+          this.gameBoard[entry.die] = entry.die * entry.amount;
+          // remove eventlistener
+          parentElement.removeEventListener("click", validater)
+          // end turn
+          this.endTurn();
+          return;
+        } 
+      })
+
+      // complex value check
+      for (let entry in options) {
+        if (entry === "value") {
+          continue;
+        }
+        if (entry === UIelementName) {
+          // evaluate based on string
+          let evaluateIncomingString = new Conditionals().eval({key: entry, value: options[entry]})
+          this.gameBoard[entry] = evaluateIncomingString
+          UIelement.innerHTML = evaluateIncomingString
+
+          // remove event listener
+          parentElement.removeEventListener("click", validater)
+          this.endTurn()
+          return;
+        }
+        console.log("try again");
+      }
+
+
+
+    }
+  }
+
+  insert(e) {
+    // determine what element was pressed
+    switch (UIelement) {
+        case('1'):
+        case('2'):
+        case('3'):
+        case('4'):
+        case('5'):
+        case('6'):
+        console.log("single value")
+        // this.el.innerHTML = this.value * this.dice;
+        // this.player.gameBoard[value] = this.value * this.dice;
+        break;
+        }
+  }
+
   // Put score in gameboard
   setScoreInGameBoard() {
     // set final hand
-    throwButton.setAttribute("disabled", "")
     let finalHand = this.getFinalHand(this.hand);
-    let options = this.calculateAvailableValues(this.gameBoard, finalHand)
+    let options = this.calculateAvailableValues(this.gameBoard, finalHand);
     // get elements for current player
     let elements = document.querySelectorAll(`.${this.playerName}`);
     // add listener for inputting single dice
+    
     for (let option of options.value) {
       elements.forEach(el => {
         if (el.classList.contains(option.die)) {
           el.style.background = 'var(--list-selected)'
-          el.addEventListener("click", this.insertValue.bind({player: this, el: el, value: option.amount, dice: option.die}))
+          el.addEventListener("click", insert({player: this, el: el, value: option.amount, dice: option.die}), {once: true})
         }
       })  
     }
@@ -144,13 +241,18 @@ class Player {
       if (option === "value") {
         continue;
       }
+
+      if (options[option] !== "" && options[option] !== false) {
+        continue;
+      }
     
+// NEEDS REFACTOR
     // if element matches option
     elements.forEach(el => {
       if (el.classList.contains(option)) {
         console.log(option)
         el.style.background = 'var(--list-selected)'; 
-        el.addEventListener("click", this.insertValue.bind({player: this, el: el, key: option, value: options[option]}));
+        el.addEventListener("click", insert.bind({player: this, el: el, key: option, value: options[option]}));
       }
     })
     }
@@ -158,7 +260,7 @@ class Player {
     elements.forEach(el => {
       if (el.classList.contains("chance")) {
           el.style.background = 'var(--list-selected)'
-          el.addEventListener("click", {player: this, el: el, key: 'chance', value: 'chance'})
+          el.addEventListener("click", insert.bind({player: this, el: el, key: 'chance', value: 'chance'}))
       }
 
     })
@@ -274,7 +376,7 @@ class Player {
     let hasEvents = document.querySelectorAll('li[style^="background"]');
       for (let el of hasEvents) {
         el.removeAttribute("style");
-        el.removeEventListener("click", this.insertValue)
+        el.removeEventListener("click", this.player.insertValue)
       }
 
     // clear dice
@@ -294,7 +396,6 @@ class Player {
     // passes turn to next player in game
     let endOfTurn = new Event('endofturn')
     document.dispatchEvent(endOfTurn);
-
 
   }
   
@@ -338,15 +439,15 @@ class Player {
   }
 
   calculateAvailableValues(gameBoard, finalHand) {
-      // Is field empty, and can be used for score?
-    let copyOfBoard = JSON.parse(JSON.stringify(gameBoard))
-      for (let entry in gameBoard) {
-        if (gameBoard[entry] === "") {
-          copyOfBoard[entry] = true
-        } else {
-          copyOfBoard[entry] = false
-        }
-      }
+    //   // Is field empty, and can be used for score?
+    // let copyOfBoard = JSON.parse(JSON.stringify(gameBoard))
+    //   for (let entry in gameBoard) {
+    //     if (gameBoard[entry] === "") {
+    //       copyOfBoard[entry] = true
+    //     } else {
+    //       copyOfBoard[entry] = false
+    //     }
+    //   }
       // Does field qualify for score?
       // Set up tests
       const test = new Conditionals()
@@ -355,30 +456,5 @@ class Player {
       return choices
 
   }
-
-  // instantiate gameboard
-  gameBoard() {
-    const gameBoard = {
-      1: "",
-      2: "",
-      3: "",
-      4: "",
-      5: "",
-      6: "",
-      bonus: false,
-      onePair: "",
-      twoPair: "",
-      threeOfAKind: "",
-      fourOfAKind: "",
-      smallStraight: "",
-      largeStraight: "",
-      house: "",
-      chance: "",
-      yatzy: "",
-      sum: ""
-  }
-  this.gameBoard = gameBoard;
-  }
-
 }
 

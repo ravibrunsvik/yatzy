@@ -112,3 +112,8 @@ li {
 .selected {
   background: rgb(233, 233, 128);
 }
+
+.dice {
+  margin-top: 10px;
+  display: inline-block;
+}
