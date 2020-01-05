@@ -37,42 +37,13 @@ let testhand = {
 // UI Vars
 // List of players
 const players = [];
-// List of boards
-const currentBoards = [];
-// list of dice
-
-// buttons
+// Game buttons
 const throwButton = document.getElementById("throw"),
-      endTurnBtn = document.getElementById("endTurn");
-
+endTurnBtn = document.getElementById("endTurn");
       
-// Turn manager
-async function turnManager(e, playerID = 0) {
-  
-  document.addEventListener("turnEnd", isGameOver);
 
-
-  let currentPlayer = players[playerID]
-  throwButton.removeEventListener("click", turnManager);
-  await currentPlayer.firstTurn(e)
-  .then(res => {
-    endTurnBtn.addEventListener("click", res.setScoreInGameBoard.bind(res))
-  })
-
-
-
-
-  // Check to see if game is over, else increment to next player
-  // let gameOver = await isGameOver()
-  //   // if at the end of turn list, reset to 0
-  // if (gameOver === false && playerID === (players.length-1)) {
-  //   turnManager(0)
-  // } else {
-  //   turnManager(playerID +1)
-  // }
-}
-
-// Listen for add player events
+// Event listeners
+// Add player
 document.getElementById("playerform").addEventListener("submit", addPlayer)
 
 // Start the game
@@ -134,25 +105,88 @@ function addPlayer(e) {
         board.removeAttribute("style");
       }
       
+
 // Start game
 function startGame() {
-  // give players a board
-  for (i = 0; i < players.length; i++) {
-    players[i].id = i
+// enable throw button, pass to turn manager
+throwButton.removeAttribute("disabled");
+
+// give players a board
+for (i = 0; i < players.length; i++) {
+  players[i].id = i
     players[i].max = players.length
   }
-  
   players.forEach(item => item.gameBoard());
-  console.log("boards given");
-  let form = document.getElementById("playerform")
   
-  // add listener to throw button
-  throwButton.removeAttribute("disabled");
-  throwButton.addEventListener("click", turnManager)
+
+  // remove player submit form
+  let form = document.getElementById("playerform");
   form.removeEventListener("submit", addPlayer)
   form.style.display = "none";
+
+  turnManager()
+  
 }
 
+function turnManager(e, playerID = 0) {
+  let currentPlayer = players[playerID]
+
+  // Reset buttons at beginning of turn
+  if (!throwButton.classList.contains("button-primary")) {
+    throwButton.classList.add("button-primary");
+    throwButton.removeAttribute("disabled")
+    endTurnBtn.classList.remove("button-primary");
+    
+  }
+
+  // Player takes first turn
+  function firstThrow(e) {
+    currentPlayer.takeTurn(e, 1, 2);
+
+      //Allow turn to end from here on 
+      // end turn event
+      endTurnBtn.addEventListener('click', () => {
+      // remove eventlisteners on throwbutton
+      throwButton.removeEventListener('click', firstThrow, {once: true})
+      throwButton.removeEventListener('first', secondThrow, {once: true})
+      throwButton.removeEventListener('second', thirdThrow, {once: true})
+      // wait for player to insert values
+      currentPlayer.setScoreInGameBoard();
+      }, {once: true})
+  }
+  
+  // second throw
+  function secondThrow(e) {
+    currentPlayer.takeTurn(e, 2, 1)
+  }
+  // third throw
+  function thirdThrow(e) {
+    currentPlayer.takeTurn(e, 3, 0);
+    throwBtn.setAttribute("disabled", "");
+    throwBtn.classList.remove("button-primary");
+    endTurnBtn.classList.add("button-primary");
+  }
+  // listen for throws
+    throwButton.addEventListener('click', firstThrow, {once: true})
+    throwButton.addEventListener('first', secondThrow, {once: true})
+    throwButton.addEventListener('second', thirdThrow, {once: true})
+
+  // when turn ends
+  document.addEventListener("endofturn", () => {
+    // if game is not over, pass to next player
+    if (isGameOver() === false) {
+      // if player is final player, give turn back to first player
+      playerID === (players.length-1) ? playerID = 0 : playerID++
+      turnManager(e, playerID)
+    } 
+
+    if (isGameOver === true) {
+      // end game functions here
+    }
+  });
+
+}
+  
 // IS GAME OVER?
 function isGameOver() {
   document.removeEventListener("turnEnd", isGameOver);
@@ -174,6 +208,10 @@ function isGameOver() {
       state = true;
     }
   })
+
+  if (state === false) {
+    throwButton.removeAttribute("disabled")
+  }
   return state;
 }
 

@@ -1,139 +1,117 @@
 class Player {
   constructor(playerName) {
     this.playerName = playerName;
+    this.options = {
+      maxTurns: 3,
+      turnCount: 1,
+      previousHand: {}
+    }
   }
 
   
   // Throw dice
-  throwDie(numberOfDice = 5) {
-    // array to keep dice values
-    const hand = [];
-    // max and minimum values on dice
-    const max = 6,
-    min = 1;
-    // return amount of dice asked for
-    for (let i = 0; i < numberOfDice; i++) {
-    // random number between min and max values
-      hand.push(Math.floor(Math.random() * (max - min) + min))
-    }
-    return hand;
-  }
+  // throwDie(numberOfDice = 5) {
+  //   // array to keep dice values
+  //   const hand = [];
+  //   // max and minimum values on dice
+  //   const max = 6,
+  //   min = 1;
+  //   // return amount of dice asked for
+  //   for (let i = 0; i < numberOfDice; i++) {
+  //   // random number between min and max values
+  //     hand.push(Math.floor(Math.random() * (max - min) + min))
+  //   }
+  //   return hand;
+  // }
 
 
-  // first turn
-  firstTurn(e) {
-    console.log(e.target.id);
-    let btn = document.getElementById(e.target.id);
-      btn.addEventListener("click", this.secondTurn.bind(this))
-    console.log("first turn");
-    console.log(this);
-    let dice = document.querySelectorAll(".dice:not(.selected)");
-    // set hand
-    this.hand = this.throwDie()
-    for (let entry in this.hand) {
-      dice[entry].addEventListener("click", this.holdOnToDie)
-      dice[entry].innerHTML = this.hand[entry];
-    }
-
-    let promise = new Promise((res, rej) => {
-      res(this)
-    })
-    return promise
-
-  }
-
-
-  secondTurn(e) {
+  // REFACTOR TURNS
+  takeTurn(e, turnCount = 1, turnsLeft = 2) {
     console.log(e.target);
-    let btn = document.getElementById(e.target.id);
-    btn.removeEventListener("click", this.secondTurn)
-    btn.addEventListener("click", this.thirdTurn.bind(this))
-    console.log("second turn")
-    console.log(this)
-    const diceAndValue = {
-      0: 0,
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
+    let UIdice = document.querySelectorAll(".dice"),
+        UIselected = document.querySelectorAll(".selected"),
+        dice = new Dice(),
+        hand = [],
+        event,
+        previousHand,
+        throwBtn = document.getElementById(e.target.id);
+
+        console.log(throwBtn);
+
+    // Custom turn events
+    function dispatchFirst() {
+      event = new Event('first');
+      throwBtn.dispatchEvent(event)
     }
-
-    // list of dice
-    let dice = document.querySelectorAll(".dice");
-    // list of selected dice
-    let selected = document.querySelectorAll(".selected");
-    let savedDice = [];
-    // add saved dice to object
-        selected.forEach(item => {
-          let diceKey = item.classList[1];
-            diceAndValue[diceKey] = Number(item.innerHTML);
-        });
-
-    // new hand to merge with saved hand
-    this.hand = this.throwDie();
-
-    // add new values to unsaved dice
-    for (let value in diceAndValue) {
-      if (diceAndValue[value] === 0) {
-        diceAndValue[value] = this.hand[value];
+    function dispatchSecond() {
+      event = new Event('second');
+        throwBtn.dispatchEvent(event)
       }
-      this.hand[value] = diceAndValue[value];
-    }
-    for (let entry in this.hand) {
-      dice[entry].innerHTML = this.hand[entry];
-    }
-
-    let promise = new Promise((res, rej) => {
-      res(this)
-    })
-    return promise
-    // return this;
-    throwButton.addEventListener("click", this.thirdTurn.bind(this), {once: true});
-  }
-  
-  thirdTurn(e) {
-    let btn = document.getElementById(e.target.id);
-    btn.removeEventListener("click", this.thirdTurn)
-    console.log("third turn")
-
-    const diceAndValue = {
-      0: 0,
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
-    }
-
-    // list of dice
-    let dice = document.querySelectorAll(".dice");
-    // list of selected dice
-    let selected = document.querySelectorAll(".selected");
-    let savedDice = [];
-    // add saved dice to object
-        selected.forEach(item => {
-          let diceKey = item.classList[1];
-            diceAndValue[diceKey] = Number(item.innerHTML);
-        });
-
-         // new hand to merge with saved hand
-    this.hand = this.throwDie();
-
-    // add new values to unsaved dice
-    for (let value in diceAndValue) {
-      if (diceAndValue[value] === 0) {
-        diceAndValue[value] = this.hand[value];
-      }
-      this.hand[value] = diceAndValue[value];
-    }
-    for (let entry in this.hand) {
-      dice[entry].innerHTML = this.hand[entry];
-    }
-
-    throwButton.classList.remove("button-primary");
-    throwButton.setAttribute("disabled", "");
-    endTurnBtn.classList.add("button-primary");
-
     
+    if (turnCount === 1) {
+      console.log("first")
+      // roll dice
+      hand = dice.roll();
+      // set hand to roll
+      this.hand = hand;
+      // display throw in UI, add click events to hold dice
+      hand.forEach((item, i) =>
+      {
+        UIdice[i].addEventListener('click', this.holdOnToDie);
+        UIdice[i].innerHTML = item;  
+      })
+      // finish turn
+      
+      throwBtn.addEventListener('click', dispatchFirst, {once: true})
+      // previousHand = {0: 0 ,1: 0, 2: 0, 3: 0, 4: 0 }
+    }
+
+    // dice magic
+    if (turnCount !== 1) {
+      UIselected.forEach(el => hand.push(el.innerHTML))
+      const diceAmount = {
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+      }
+    // add saved dice to object
+      UIselected.forEach(item => {
+        let diceKey = item.classList[1];
+          diceAmount[diceKey] = Number(item.innerHTML);
+      });
+
+      // new hand to merge with saved hand
+      hand = dice.roll();
+  
+      // add new values to unsaved dice
+      for (let idx in diceAmount) {
+        if (diceAmount[idx] === 0) {
+          diceAmount[idx] = hand[idx];
+        }
+        this.hand[idx] = diceAmount[idx];
+      }
+      for (let idx in this.hand) {
+        UIdice[idx].innerHTML = this.hand[idx];
+      }
+    }
+    // what turn is it?
+    if (turnCount === 2) {
+      console.log("second")
+      
+      throwBtn.addEventListener('click', dispatchSecond, {once: true})
+      throwBtn.removeEventListener('click', dispatchFirst, {once: true})
+    }
+
+    if (turnCount === 3) {
+      console.log("third")
+      throwBtn.removeEventListener('click', dispatchSecond, {once: true})
+      
+    }
+    // amount of dice to be thrown
+
+    // if dice exists, save selected
   }
   holdOnToDie(e) {
     if (!e.target.classList.contains("selected")) {
@@ -143,13 +121,12 @@ class Player {
   
   // Put score in gameboard
   setScoreInGameBoard() {
-    // document.removeEventListener()
     // set final hand
+    throwButton.setAttribute("disabled", "")
     let finalHand = this.getFinalHand(this.hand);
     let options = this.calculateAvailableValues(this.gameBoard, finalHand)
     // get elements for current player
     let elements = document.querySelectorAll(`.${this.playerName}`);
-
     // add listener for inputting single dice
     for (let option of options.value) {
       elements.forEach(el => {
@@ -177,6 +154,14 @@ class Player {
       }
     })
     }
+
+    elements.forEach(el => {
+      if (el.classList.contains("chance")) {
+          el.style.background = 'var(--list-selected)'
+          el.addEventListener("click", {player: this, el: el, key: 'chance', value: 'chance'})
+      }
+
+    })
   }
 
   // insertValue
@@ -305,10 +290,10 @@ class Player {
   }
 
   endTurn() {
-    console.log("hello")
+    console.log("turn ended")
     // passes turn to next player in game
-    let turnOver = new Event('turnEnd')
-    document.dispatchEvent(turnOver);
+    let endOfTurn = new Event('endofturn')
+    document.dispatchEvent(endOfTurn);
 
 
   }
