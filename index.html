@@ -5,29 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" integrity="sha256-ECB9bbROLGm8wOoEbHcHRxlHgzGqYpDtNTgDTyDz0wg=" crossorigin="anonymous" />
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" integrity="sha256-ECB9bbROLGm8wOoEbHcHRxlHgzGqYpDtNTgDTyDz0wg=" crossorigin="anonymous" /> -->
+  <link rel="stylesheet" href="./normalize.css">
+  <link rel="stylesheet" href="./skeleton.css">
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
   <div class="container">
     <h1>Yatzy</h1>
+    <div class="message-box hidden">
+    </div>
       <div class="row">
-        <div>
+        <div class="flex">
           <form id="playerform">
             <label for="name">Choose name</label>
-            <input type="text" name="name" id="name">
-            <input type="submit" value="Choose" class="" id="submit">
+            <input type="text" name="name" id="name" placeholder="Enter initials">
+            <input type="submit" value="Add player" class="" id="submit">
             <input type="button" value="Start game" class="button-primary" id="start" style="display: none;">
           </form>
+        
         </div>
+          
       </div>
-      <div class="row mainBoard" style="visibility: hidden;">
+      <div class="flex mainBoard" style="visibility: hidden;">
 
-        <div class="gameboard four columns" id="gameboard">
+        <div class="gameboard" id="gameboard">
           <div class="itemNames">
             
             <ul class="itemList">
-              <h6>#</h6>
+              <li>#</li>
               <li>Ones</li>
               <li>Twos</li>
               <li>Threes</li>
@@ -48,28 +54,27 @@
             </ul>
           </div>
         </div>
-          <div class="playerNames six columns">
-            <div class="row" id="playerInsert">
+          <div class="playerNames flex" id="playerInsert">
+      </div>
+      <div class="output flex-container"> 
+        <ul class="diceList">
+          <li class="dice 0"></li>
+          <li class="dice 1"></li>
+          <li class="dice 2"></li>
+          <li class="dice 3"></li>
+          <li class="dice 4"></li>
+        </ul>
+        <div class="flex-container">
+    
+          <button id="throw" class="button-primary" disabled>Throw</button>
+          <button id="endTurn">End turn</button>
         </div>
       </div>
-      <button id="throw" class="button-primary" disabled>Throw</button>
-      <button id="endTurn">End turn</button>
     </div>
-    <div class="output one column"> 
-      <ul class="diceList">
-        <li class="dice 0"></li>
-        <li class="dice 1"></li>
-        <li class="dice 2"></li>
-        <li class="dice 3"></li>
-        <li class="dice 4"></li>
-      </ul>
-    </div>
-    
-          
-          <script src="player.js"></script>
-          <script src="conditionals.js""></script>
-          <script src="dice.js""></script>
-          <script src="gameboard.js"></script>
+  <script src="player.js"></script>
+  <script src="conditionals.js""></script>
+  <script src="dice.js""></script>
+  <script src="gameboard.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

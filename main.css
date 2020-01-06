@@ -3,28 +3,37 @@
   padding: 0px;
 } */
 :root {
-  --list-selected: rgb(206, 206, 126);
+  --list-selected: rgb(67, 173, 90);
+  --board-width: 500px;
 }
 
 body {
   background: rgb(158, 158, 157);
-  font-size: 1.2rem;
   user-select: none;
 }
 
 
-/* #gameboard {
-  display: grid;
-  justify-items: center;
-  grid-template-areas:
-  'itemNames playerNames'
-  'itemNames playerList';
-} */
+.message-box {
+  height: 40px;
+  width: var(--board-width);
+  background-color: rgb(118, 167, 69);
+  color: white;
+  opacity: initial;
+  /* transition-duration: 2s; */
+  text-align: center;
+  font-size: 20px;
+}
 
+.hidden {
+  transition-duration: 2s;
+  opacity: 0;
+  visibility: hidden;
+}
 
 .mainBoard {
   background-color: gray;
-  width: 450px;
+  width: var(--board-width);
+  position: relative;
 }
 
 
@@ -35,8 +44,12 @@ li {
   font-weight: bold;
 }
 
+.itemlist li:first-child, .playerlist li:first-child {
+  border: 2px solid white;
+}
+
 .itemList li {
-  width: 150px;  
+  width: 116px;  
 }
 
 .playerList li {
@@ -45,9 +58,11 @@ li {
 
 .playerList li, .itemList li {
   list-style-type: none;
-  /* background: rgb(206, 205, 205); */
+  /* background: rgb(155, 155, 155); */
   margin: 0px;
-  border: 1px white solid;
+  border: 1px rgb(187, 187, 187) solid;
+  color: #e2e2e2;
+  text-shadow: black 0.5px 0.5px;
 }
 
 .diceList {
@@ -108,13 +123,35 @@ background-image: url('./images/three die.png');
   background-color: var(--list-selected)
 }
 
+
+
 .dice {
   /* margin-top: 10px; */
   /* display: inline-block; */
 }
 
 .output {
-  position: relative;
-  left: 500px;
-  bottom: 740px;
+  padding: 5px 0 0 30px;
+  /* position: absolute; */
+  /* top: 5px; */
+  /* right: 5px; */
+  /* left: 500px; */
+  /* bottom: 740px; */
+}
+
+
+.flex {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: auto auto auto auto
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
 }
