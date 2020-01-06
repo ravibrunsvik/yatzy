@@ -4,7 +4,7 @@ class Dice {
     // array to keep dice values
     const hand = [];
     // max and minimum values on dice
-    const max = 6,
+    const max = 7,
           min = 1;
     // return amount of dice asked for
     for (let i = 0; i < numberOfDice; i++) {

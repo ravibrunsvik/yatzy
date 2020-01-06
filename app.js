@@ -53,6 +53,8 @@ function addPlayer(e) {
     <li class="${name}${players.length - 1} twoPair"></li>
     <li class="${name}${players.length - 1} threeKind"></li>
     <li class="${name}${players.length - 1} fourKind"></li>
+    <li class="${name}${players.length - 1} tinyStraight"></li>
+    <li class="${name}${players.length - 1} bigStraight"></li>
     <li class="${name}${players.length - 1} house"></li>
     <li class="${name}${players.length - 1} chance"></li>
     <li class="${name}${players.length - 1} yatzy"></li>
@@ -97,14 +99,15 @@ for (i = 0; i < players.length; i++) {
   
 }
 
-function turnManager(e, playerID = 0) {
+function turnManager(playerID = 0) {
   let currentPlayer = players[playerID]
-
+  
   // Reset buttons at beginning of turn
   if (!throwButton.classList.contains("button-primary")) {
     throwButton.classList.add("button-primary");
     throwButton.removeAttribute("disabled")
     endTurnBtn.classList.remove("button-primary");
+    endTurnBtn.removeAttribute("disabled")
     
   }
 
@@ -114,11 +117,12 @@ function turnManager(e, playerID = 0) {
 
       //Allow turn to end from here on 
       // end turn event
-      endTurnBtn.addEventListener('click', endButton)
+      return endTurnBtn.addEventListener('click', endButton);
   }
 
-  function endButton() {
-    // remove eventlisteners on throwbutton
+  function endButton(e) {
+    // remove eventlisteners
+    endTurnBtn.removeEventListener('click', endButton);
     throwButton.removeEventListener('click', firstThrow, {once: true})
     throwButton.removeEventListener('first', secondThrow, {once: true})
     throwButton.removeEventListener('second', thirdThrow, {once: true})
@@ -126,14 +130,15 @@ function turnManager(e, playerID = 0) {
     // UI show button as disabled
     throwButton.setAttribute("disabled", "");
     throwButton.classList.remove("button-primary");
+    endTurnBtn.setAttribute("disabled", "")
+    endTurnBtn.classList.remove("button-primary");
     // wait for player to insert values
-    currentPlayer.scoreRefactor();
-    endTurnBtn.removeEventListener('click', endButton)
+    return currentPlayer.scoreRefactor(e);
   }
   
   // second throw
   function secondThrow(e) {
-    currentPlayer.takeTurn(e, 2, 1)
+    return currentPlayer.takeTurn(e, 2, 1);
   }
   // third throw
   function thirdThrow(e) {
@@ -141,8 +146,7 @@ function turnManager(e, playerID = 0) {
     throwButton.setAttribute("disabled", "");
     throwButton.classList.remove("button-primary");
     endTurnBtn.classList.add("button-primary");
-
-    currentPlayer.scoreRefactor();
+    return currentPlayer.scoreRefactor();
   }
   // listen for throws
     throwButton.addEventListener('click', firstThrow, {once: true})
@@ -150,31 +154,36 @@ function turnManager(e, playerID = 0) {
     throwButton.addEventListener('second', thirdThrow, {once: true})
 
   // when turn ends
-  document.addEventListener("endofturn", endOfTurn, {once: true});
+  throwButton.addEventListener("endofturn", endOfTurn, {once: true});
 
   function endOfTurn(e) {
-    console.log(playerID);
+    document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'))
+    // remove eventlisteners on throwbutton
+    // throwButton.removeEventListener('click', firstThrow, {once: true})
+    // throwButton.removeEventListener('first', secondThrow, {once: true})
+    // throwButton.removeEventListener('second', thirdThrow, {once: true})
+    
+    // UI show button as disabled
+    throwButton.classList.remove("button-primary");
+    endTurnBtn.removeEventListener('click', endButton);
      // if game is not over, pass to next player
     if (isGameOver() === false) {
       // if player is final player, give turn back to first player
       playerID === (players.length-1) ? playerID = 0 : playerID++
-      console.log(e)
-      console.log(playerID)
-      turnManager(e, playerID)
+      return turnManager(playerID)
     } 
 
     if (isGameOver === true) {
       // end game functions here
     }
+    return;
   }
-
+  return;
 }
-  
+
 // IS GAME OVER?
 function isGameOver() {
-  document.removeEventListener("endofturn", isGameOver);
-
-  console.log("gotcha")
+  throwButton.removeEventListener("endofturn", isGameOver);
   let state;
   players.forEach(player => {
     for (let entry in player.gameBoard) {
@@ -193,7 +202,7 @@ function isGameOver() {
   })
 
   if (state === false) {
-    throwButton.removeAttribute("disabled")
+    throwButton.removeAttribute("disabled");
   }
   return state;
 }

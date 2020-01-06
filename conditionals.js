@@ -189,12 +189,10 @@ isYatzy(hand) {
   return false;
 }
 
-isChance(field) {
-  if (field === "") {
-    return true;
-  }
+isChance(hand) {
+  hand
 
-  return false;
+  return true;
 }
 
 runConditions(hand) {
@@ -206,7 +204,8 @@ runConditions(hand) {
         tinyStraight = this.isTinyStraight(hand),
         bigStraight = this.isBigStraight(hand),
         house = this.isHouse(hand),
-        yatzy = this.isYatzy(hand);
+        yatzy = this.isYatzy(hand),
+        chance = this.isChance(hand)
 
   let objectWithConditions = {
     value: value,
@@ -217,7 +216,8 @@ runConditions(hand) {
     tinyStraight: tinyStraight,
     bigStraight: bigStraight, 
     house: house,
-    yatzy: yatzy
+    yatzy: yatzy,
+    chance: chance
   }
   return objectWithConditions;
 }
@@ -228,7 +228,7 @@ runConditions(hand) {
         key = object.key,
         value = object.value
 
-
+    console.log(object);
     switch (key) {
       case ('onePair'):
         // iterate for each
@@ -254,10 +254,8 @@ runConditions(hand) {
         }
           return counter * 4
       case('yatzy'): 
-        for (let entry of value) {
-          counter = entry.die
-        }
-        return counter * 5
+        counter = value;
+        return counter
       
       case('tinyStraight'):
         return 15;

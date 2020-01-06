@@ -8,6 +8,18 @@ class Player {
     }
   }
 
+   // Custom turn events
+  dispatchFirst() {
+    let throwBtn = document.querySelector("#throw")
+    event = new Event('first');
+    return throwBtn.dispatchEvent(event)
+    
+  }
+  dispatchSecond() {
+    let throwBtn = document.querySelector("#throw")
+    event = new Event('second');
+      return throwBtn.dispatchEvent(event)
+    }
   takeTurn(e, turnCount = 1, turnsLeft = 2) {
     let UIdice = document.querySelectorAll(".dice"),
         UIselected = document.querySelectorAll(".selected"),
@@ -15,20 +27,11 @@ class Player {
         hand = [],
         event,
         previousHand,
-        throwBtn = document.getElementById(e.target.id);
+        throwBtn = document.querySelector('#throw')
 
-    // Custom turn events
-    function dispatchFirst() {
-      event = new Event('first');
-      throwBtn.dispatchEvent(event)
-    }
-    function dispatchSecond() {
-      event = new Event('second');
-        throwBtn.dispatchEvent(event)
-      }
+   
     
     if (turnCount === 1) {
-      console.log("first")
       // roll dice
       hand = dice.roll();
       // set hand to roll
@@ -41,15 +44,11 @@ class Player {
       })
       // finish turn
       
-      throwBtn.addEventListener('click', dispatchFirst, {once: true})
-      // previousHand = {0: 0 ,1: 0, 2: 0, 3: 0, 4: 0 }
+      return throwBtn.addEventListener('click', this.dispatchFirst, {once: true})
     }
 
-    // dice magic
     // Save dice from last turn, add new dice in saved indexes.
     if (turnCount !== 1) {
-
-      // UIselected.forEach(el => hand.push(el.innerHTML))
       // indexed dice
       const diceAmount = {
         0: 0,
@@ -85,16 +84,14 @@ class Player {
 
     // what turn is it?
     if (turnCount === 2) {
-      console.log("second")
       // cleanup event listeners
-      throwBtn.addEventListener('click', dispatchSecond, {once: true})
-      throwBtn.removeEventListener('click', dispatchFirst, {once: true})
+      throwBtn.addEventListener('click', this.dispatchSecond, {once: true})
+      return throwBtn.removeEventListener('click', this.dispatchFirst, {once: true})
     }
 
     if (turnCount === 3) {
-      console.log("third")
       // cleanup event listeners
-      throwBtn.removeEventListener('click', dispatchSecond, {once: true})
+      return throwBtn.removeEventListener('click', this.dispatchSecond, {once: true})
     }
   }
   holdOnToDie(e) {
@@ -103,11 +100,22 @@ class Player {
     } else e.target.classList.remove("selected")
   } 
   
-  scoreRefactor() {
+  scoreRefactor(e) {
     // final hand
-    const playerID = `${this.playerName}${this.id}`
-    const finalHand = this.getFinalHand(this.hand);
-    const currentBoard = this.gameBoard;
+    const playerID = `${this.playerName}${this.id}`,
+          finalHand = this.getFinalHand(this.hand),
+          currentBoard = this.gameBoard,
+          throwBtn = document.querySelector("#throw"),
+          chance = document.querySelector(`.${playerID}+.chance`);
+
+    // remove button event listeners
+    throwBtn.removeEventListener('click', this.dispatchFirst, {once: true})
+    throwBtn.removeEventListener('click', this.dispatchSecond, {once: true})
+    
+    // chance available?
+    if (chance.innerHTML === "") {
+      chance.classList.add("selected");
+    }
     // available options
     const options = this.calculateAvailableValues(currentBoard, finalHand);
     // const elements = document.querySelectorAll(`.${playerID}`);
@@ -115,17 +123,16 @@ class Player {
     // add event listeners to each single value
     for (let entry of options.value) {
       // get single value die element
-      let element = document.querySelector(`[class$='${entry.die}']`);
+      let element = document.querySelector(`[class^='${playerID} ${entry.die}']`);
       // Squary is empty and can be filled in
       if (element.innerHTML === "") {
-        element.style.background =  "var(--list-selected)"
         element.classList.add("selected");
       }
       
     }
 
-    // add event listeners to all other options
     for (let entry in options) {
+      let element = document.querySelector(`[class^="${playerID} ${entry}"]`)
     // Option is not available, continue
       if (options[entry] === false) {
         continue;
@@ -135,268 +142,98 @@ class Player {
         continue;
       }
       // All other options get event listener
-      let element = document.querySelector(`[class^="${playerID} ${entry}"]`)
         if (element.innerHTML === "") {
-          element.style.background = "var(--list-selected)"
           element.classList.add("selected");
         }
     }
-    // add event listener to parent element
-    /* validater creates reference to function
-      this preserves function binding and enables us to remove event listener */
-    const validater = validate.bind(this)
-    parentElement.addEventListener("click", validater);
+ 
 
     function validate(e) {
-      console.log(this)
       // Name of clicked element
       const UIelementName = e.target.classList[1],
             UIelement = e.target,
-            parentElement = e.target.parentElement.parentElement;
+            parentElement = e.target.parentElement.parentElement,
+            dice = document.querySelectorAll(".dice");
 
       // If element clicked is not among candidates, try again
       if (!UIelement.classList.contains("selected")) {
-        console.log("try again");
         // TODO: add message to UI
-        return;
+
       }
       // Match name against option
+
       // single value check
-      options.value.forEach(entry => {
-        if (entry.die.toString() === UIelementName) {
-          // add value to UI
-          UIelement.innerHTML = entry.die * entry.amount;
-          // add value to gameboard
-          this.gameBoard[entry.die] = entry.die * entry.amount;
-          // remove eventlistener
-          parentElement.removeEventListener("click", validater)
-          // end turn
-          this.endTurn();
-          return;
-        } 
-      })
-
-      // complex value check
-      for (let entry in options) {
-        if (entry === "value") {
-          continue;
-        }
-        if (entry === UIelementName) {
-          // evaluate based on string
-          let evaluateIncomingString = new Conditionals().eval({key: entry, value: options[entry]})
-          this.gameBoard[entry] = evaluateIncomingString
-          UIelement.innerHTML = evaluateIncomingString
-
-          // remove event listener
-          parentElement.removeEventListener("click", validater)
-          this.endTurn()
-          return;
-        }
-        console.log("try again");
-      }
-
-
-
-    }
-  }
-
-  insert(e) {
-    // determine what element was pressed
-    switch (UIelement) {
+      switch (UIelementName) {
         case('1'):
         case('2'):
         case('3'):
         case('4'):
         case('5'):
         case('6'):
-        console.log("single value")
-        // this.el.innerHTML = this.value * this.dice;
-        // this.player.gameBoard[value] = this.value * this.dice;
-        break;
-        }
-  }
-
-  // Put score in gameboard
-  setScoreInGameBoard() {
-    // set final hand
-    let finalHand = this.getFinalHand(this.hand);
-    let options = this.calculateAvailableValues(this.gameBoard, finalHand);
-    // get elements for current player
-    let elements = document.querySelectorAll(`.${this.playerName}`);
-    // add listener for inputting single dice
-    
-    for (let option of options.value) {
-      elements.forEach(el => {
-        if (el.classList.contains(option.die)) {
-          el.style.background = 'var(--list-selected)'
-          el.addEventListener("click", insert({player: this, el: el, value: option.amount, dice: option.die}), {once: true})
-        }
-      })  
-    }
-    // other options
-    for (let option in options) {
-      if (options[option] === false) {
-        continue;
-      }
-      if (option === "value") {
-        continue;
-      }
-
-      if (options[option] !== "" && options[option] !== false) {
-        continue;
-      }
-    
-// NEEDS REFACTOR
-    // if element matches option
-    elements.forEach(el => {
-      if (el.classList.contains(option)) {
-        console.log(option)
-        el.style.background = 'var(--list-selected)'; 
-        el.addEventListener("click", insert.bind({player: this, el: el, key: option, value: options[option]}));
-      }
-    })
-    }
-
-    elements.forEach(el => {
-      if (el.classList.contains("chance")) {
-          el.style.background = 'var(--list-selected)'
-          el.addEventListener("click", insert.bind({player: this, el: el, key: 'chance', value: 'chance'}))
-      }
-
-    })
-  }
-
-  // insertValue
-  insertValue() {
-    // set game board value
-    let value = this.el.classList[1];
-    // if item is single value 
-    if (this.key === undefined) {
-      switch (Number(value)) {
-        case(1):
-        case(2):
-        case(3):
-        case(4):
-        case(5):
-        case(6):
-        this.el.innerHTML = this.value * this.dice;
-        this.player.gameBoard[value] = this.value * this.dice;
-        break;
-        }
-      }
-        
-      // init counter
-      let counter = 0;
-      // if complex value:
-    switch (this.key) {
-      case ('onePair'):
-        // iterate for each
-        // hold on to biggest die
-          for (let entry of this.value) {
-            entry.die > counter ? counter = entry.die : ''
+        for (let entry of options.value) {
+          if (entry.die.toString() === UIelementName && UIelement.innerHTML === "") {
+            // add value to UI
+            UIelement.innerHTML = entry.die * entry.amount;
+            // add value to gameboard
+            this.gameBoard[entry.die] = entry.die * entry.amount;
+            // remove eventlistener
+            parentElement.removeEventListener("click", validater)
+            // clear dice
+            dice.forEach(die => die.innerHTML = "");
+            // end turn
+            this.endTurn();
+            break;
           }
-          // insert into UI
-          this.el.innerHTML = (counter * 2);
-          // insert into gameBoard
-          this.player.gameBoard[this.key] = (counter * 2)
-        break;
-      case ('twoPair'):
-        // combine dies
-        for (let entry of this.value) {
-          counter += entry.die
         }
-        // insert into UI
-        this.el.innerHTML = (counter * 2);
-        // insert into gameBoard
-        this.player.gameBoard[this.key] = (counter * 2)
         break;
-      case ('threeKind'):
-        for (let entry of this.value) {
-          counter = entry.die
-        }
-          // insert into UI
-          this.el.innerHTML = (counter * 3);
-          // insert into gameBoard
-          this.player.gameBoard[this.key] = (counter * 3)
-        break;
-      case ('fourKind'):
-        for (let entry of this.value) {
-          counter = entry.die
-        }
-          // insert into UI
-          this.el.innerHTML = (counter * 4);
-          // insert into gameBoard
-          this.player.gameBoard[this.key] = (counter * 4)
-        break;
-      case('yatzy'): {
-        for (let entry of this.value) {
-          counter = entry.die
-        }
-          // insert into UI
-          this.el.innerHTML = (counter * 5);
-          // insert into gameBoard
-          this.player.gameBoard[this.key] = (counter * 5)
-      }
-      case('tinyStraight'):
-        counter = 15;
-         // insert into UI
-        this.el.innerHTML = (counter);
-         // insert into gameBoard
-        this.player.gameBoard[this.key] = (counter)
-        break;
-      case('bigStraight'):
-        counter = 20;
-        // insert into UI
-        this.el.innerHTML = (counter);
-        // insert into gameBoard
-        this.player.gameBoard[this.key] = (counter)
-        break;
-      case('house'):
-        for (let entry of this.value) {
-          counter += Number(entry.die) * Number(entry.amount)
-        }
-        // insert into UI
-        this.el.innerHTML = (counter);
-          // insert into gameBoard
-        this.player.gameBoard[this.key] = (counter)
-        break;
-      case('chance'):
-        counter = this.player.hand.reduce((a, b) => a + b)
-        this.el.innerHTML = counter;
-          // insert into gameBoard
-        this.player.gameBoard.chance = counter;
-        break;
-      default:
-        break;
-    }
-    // set board value in UI
+        case('chance'):
+            if (UIelement.innerHTML === "" && this.gameBoard.chance === "") {
 
-    // insert value into gameboard
-    // cleanup event listener
-    let hasEvents = document.querySelectorAll('li[style^="background"]');
-      for (let el of hasEvents) {
-        el.removeAttribute("style");
-        el.removeEventListener("click", this.player.insertValue)
+              parentElement.removeEventListener("click", validater);
+              this.gameBoard.chance = this.hand.reduce((a, b) => a + b);
+              UIelement.innerHTML = this.hand.reduce((a, b) => a + b);
+              dice.forEach(die => die.innerHTML = "");
+              this.endTurn()
+            }
+          break;
+        default:
+              // complex value check
+          for (let entry in options) {
+            if (entry === "value") {
+              continue;
+            }
+            if (entry === UIelementName && UIelement.innerHTML === "") {
+              console.log(entry)
+              console.log(options[entry])
+              // evaluate based on string
+              let evaluateIncomingString = new Conditionals().eval({key: entry, value: options[entry]}, this)
+              // add to board and UI
+              this.gameBoard[entry] = evaluateIncomingString
+              UIelement.innerHTML = evaluateIncomingString
+              // clear dice
+              dice.forEach(die => die.innerHTML = "");
+              // remove event listener
+              parentElement.removeEventListener("click", validater);
+              this.endTurn();
+              break;
+              
+            }
+          } break;
       }
-
-    // clear dice
-    let dice = document.querySelectorAll(".dice")
-      for (let die of dice) {
-        die.innerHTML = "";
-        if (die.classList.contains("selected")) {
-          die.classList.remove("selected")
-        }
-      }
-
-      this.player.endTurn()
+  }
+       // add event listener to parent element
+    /* validater creates reference to function
+      this preserves function binding and enables us to remove event listener */
+      const validater = validate.bind(this)
+      return parentElement.addEventListener("click", validater);
   }
 
   endTurn() {
-    console.log("turn ended")
+    const throwBtn = document.querySelector("#throw")
     // passes turn to next player in game
     let endOfTurn = new Event('endofturn')
-    document.dispatchEvent(endOfTurn);
-
+    return throwBtn.dispatchEvent(endOfTurn);
+    
   }
   
 
@@ -439,16 +276,6 @@ class Player {
   }
 
   calculateAvailableValues(gameBoard, finalHand) {
-    //   // Is field empty, and can be used for score?
-    // let copyOfBoard = JSON.parse(JSON.stringify(gameBoard))
-    //   for (let entry in gameBoard) {
-    //     if (gameBoard[entry] === "") {
-    //       copyOfBoard[entry] = true
-    //     } else {
-    //       copyOfBoard[entry] = false
-    //     }
-    //   }
-      // Does field qualify for score?
       // Set up tests
       const test = new Conditionals()
       // Available choices
