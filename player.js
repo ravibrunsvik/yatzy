@@ -25,11 +25,7 @@ class Player {
         UIselected = document.querySelectorAll(".selected"),
         dice = new Dice(),
         hand = [],
-        event,
-        previousHand,
         throwBtn = document.querySelector('#throw')
-
-   
     
     if (turnCount === 1) {
       UIselected.forEach(el => el.classList.contains("selected") ? el.classList.remove("selected") : '')
@@ -121,6 +117,7 @@ class Player {
     }
     // available options
     const options = this.calculateAvailableValues(currentBoard, finalHand);
+    // TODO evaluate if all options are false
     // const elements = document.querySelectorAll(`.${playerID}`);
     const parentElement = document.getElementById(playerID);
     // add event listeners to each single value
@@ -149,7 +146,6 @@ class Player {
           element.classList.add("selected");
         }
     }
- 
 
     function validate(e) {
       // Name of clicked element
@@ -230,6 +226,9 @@ class Player {
   }
 
   endTurn() {
+    // check for bonus
+    this.isBonus();
+    
     const throwBtn = document.querySelector("#throw")
     // passes turn to next player in game
     let endOfTurn = new Event('endofturn')
@@ -238,6 +237,21 @@ class Player {
   }
   
 
+  isBonus() {
+    const bonusField = document.querySelector(`.${this.playerName}${this.id} .bonus`)
+
+    if (this.gameBoard.bonus !== false) {
+      return;
+    }
+    const objectWithAmountToCheck = [this.gameBoard[1], this.gameBoard[2], this.gameBoard[3], this.gameBoard[4], this.gameBoard[5], this.gameBoard[6]]
+    const currentAmountToCheck = objectWithAmountToCheck.reduce((a, b) => Number(a) + Number(b))
+      if (currentAmountToCheck >= 63) {
+        this.gameBoard.bonus = 50;
+        bonusField.innerHTML = 50
+      }
+      console.log(currentAmountToCheck);
+      return;
+  }
 
   // Get last hand as an object to compare
   getFinalHand(hand) {
