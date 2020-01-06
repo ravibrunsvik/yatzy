@@ -154,6 +154,7 @@ isBigStraight(hand) {
     
 isHouse(hand) {
   // 3 of a and 2 of b
+  // TODO: iterables fail sometimes
   let check = [];
   let counter = 0;
   for (let dice in hand) {
