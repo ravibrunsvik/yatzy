@@ -8,7 +8,10 @@
 
 body {
   background: rgb(158, 158, 157);
+  font-size: 1.2rem;
+  user-select: none;
 }
+
 
 /* #gameboard {
   display: grid;
@@ -21,13 +24,15 @@ body {
 
 .mainBoard {
   background-color: gray;
+  width: 450px;
 }
 
 
 li {
   list-style-type: none;
   width:45px;
-  height: 40px;
+  height: 35px;
+  font-weight: bold;
 }
 
 .itemList li {
@@ -41,7 +46,7 @@ li {
 .playerList li, .itemList li {
   list-style-type: none;
   /* background: rgb(206, 205, 205); */
-  /* margin: 0px 5px; */
+  margin: 0px;
   border: 1px white solid;
 }
 
@@ -67,46 +72,36 @@ li {
   margin: 2px;
 }
 
-.one-face, .two-face, .three-face, .four-face, .five-face, .six-face {
-  display: flex;
-}
-
 .one-face {
-  justify-content: center;
-  align-items: center;
+  background-image: url('./images/one die.png')
 }
 
-.two-face, .four-face, .six-face {
-  justify-content: space-between;
+.two-face {
+background-image: url('./images/two die.png');
 }
 
-
-.two-face .dot:last-child, .three-face .dot:last-child, .five-face .dot:last-child, .six-face .dot:last-child {
-  /* margin: 2px; */
-  align-self: flex-end;
+.three-face {
+background-image: url('./images/three die.png');
 }
-
-
-.three-face .dot:nth-child(2) {
-  align-self: center;
-}
-
-.four-face .dot:nth-child(2) {
-  justify-self: flex-start;
-  align-self: flex-end;
-}
-
 
 .four-face {
-  flex-direction: column;
+  background-image: url('./images/four die.png');
 }
 
 .five-face {
-
+  background-image: url('./images/five die.png');
 }
 
 .six-face {
+  background-image: url('./images/six die.png'); 
+}
 
+.one-face, .two-face, .three-face, .four-face, .five-face, .six-face {
+  height: 40px;
+  background-size: cover;
+  background-position: center;
+  text-indent: -9999px;
+  overflow: hidden;
 }
 
 .selected {
@@ -114,6 +109,12 @@ li {
 }
 
 .dice {
-  margin-top: 10px;
-  display: inline-block;
+  /* margin-top: 10px; */
+  /* display: inline-block; */
+}
+
+.output {
+  position: relative;
+  left: 500px;
+  bottom: 740px;
 }

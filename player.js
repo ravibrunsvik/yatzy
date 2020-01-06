@@ -32,6 +32,7 @@ class Player {
    
     
     if (turnCount === 1) {
+      UIselected.forEach(el => el.classList.contains("selected") ? el.classList.remove("selected") : '')
       // roll dice
       hand = dice.roll();
       // set hand to roll
@@ -43,7 +44,7 @@ class Player {
         UIdice[i].innerHTML = item;  
       })
       // finish turn
-      
+      Dice.setDiceFace();
       return throwBtn.addEventListener('click', this.dispatchFirst, {once: true})
     }
 
@@ -84,12 +85,14 @@ class Player {
 
     // what turn is it?
     if (turnCount === 2) {
+      Dice.setDiceFace()
       // cleanup event listeners
       throwBtn.addEventListener('click', this.dispatchSecond, {once: true})
       return throwBtn.removeEventListener('click', this.dispatchFirst, {once: true})
     }
 
     if (turnCount === 3) {
+      Dice.setDiceFace()
       // cleanup event listeners
       return throwBtn.removeEventListener('click', this.dispatchSecond, {once: true})
     }
@@ -203,8 +206,6 @@ class Player {
               continue;
             }
             if (entry === UIelementName && UIelement.innerHTML === "") {
-              console.log(entry)
-              console.log(options[entry])
               // evaluate based on string
               let evaluateIncomingString = new Conditionals().eval({key: entry, value: options[entry]}, this)
               // add to board and UI

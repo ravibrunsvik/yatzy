@@ -21,7 +21,7 @@
           </form>
         </div>
       </div>
-      <div class="row mainBoard" style="display: none;">
+      <div class="row mainBoard" style="visibility: hidden;">
 
         <div class="gameboard four columns" id="gameboard">
           <div class="itemNames">
@@ -48,23 +48,24 @@
             </ul>
           </div>
         </div>
-          <div class="playerNames eight columns">
+          <div class="playerNames six columns">
             <div class="row" id="playerInsert">
         </div>
       </div>
       <button id="throw" class="button-primary" disabled>Throw</button>
       <button id="endTurn">End turn</button>
     </div>
-
-          <div class="output"> 
-            <ul class="diceList">
-              <li class="dice 0"></li>
-              <li class="dice 1"></li>
-              <li class="dice 2"></li>
-              <li class="dice 3"></li>
-              <li class="dice 4"></li>
-            </ul>
-          </div>
+    <div class="output one column"> 
+      <ul class="diceList">
+        <li class="dice 0"></li>
+        <li class="dice 1"></li>
+        <li class="dice 2"></li>
+        <li class="dice 3"></li>
+        <li class="dice 4"></li>
+      </ul>
+    </div>
+    
+          
           <script src="player.js"></script>
           <script src="conditionals.js""></script>
           <script src="dice.js""></script>

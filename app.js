@@ -9,7 +9,7 @@
 const players = [];
 // Game buttons
 const throwButton = document.getElementById("throw"),
-endTurnBtn = document.getElementById("endTurn");
+      endTurnBtn = document.getElementById("endTurn");
       
 // Event listeners
 // Add player
@@ -145,7 +145,8 @@ function turnManager(playerID = 0) {
     currentPlayer.takeTurn(e, 3, 0);
     throwButton.setAttribute("disabled", "");
     throwButton.classList.remove("button-primary");
-    endTurnBtn.classList.add("button-primary");
+    endTurnBtn.removeEventListener("click", endButton);
+    endTurnBtn.setAttribute("disabled", "")
     return currentPlayer.scoreRefactor();
   }
   // listen for throws

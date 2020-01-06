@@ -14,5 +14,38 @@ class Dice {
     return hand;
   }
 
+  // Assign dice icons
+  static setDiceFace() {
 
+    const dice = document.querySelectorAll('.dice');
+    let classNames = ['one-face', 'two-face', 'three-face', 'four-face', 'five-face', 'six-face']
+
+    for (let die of dice) {
+      classNames.forEach(className => die.classList.contains(className) ? die.classList.remove(className) : '')
+
+        switch (die.innerHTML) {
+          case '1':
+            die.classList.add("one-face")
+            break;
+          case '2':
+            die.classList.add('two-face')
+            
+            break;
+          case '3':
+            die.classList.add('three-face')
+            break;
+          case '4':
+            die.classList.add('four-face');
+            break;
+          case '5':
+            die.classList.add('five-face');
+            break;
+          case '6':
+            die.classList.add('six-face')
+            break;
+          default:
+            break;
+        }
+      }
+  }
 }
