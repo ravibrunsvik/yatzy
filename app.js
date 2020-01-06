@@ -33,15 +33,14 @@ function addPlayer(e) {
   }
   // add player to game
   // max 6 players
-  if (players.length !== 6) {
+  if (players.length !== 4) {
     let player = new Player(name);
     players.push(player);
 
     // Add player rows to game sheet
     let insertDiv = document.getElementById("playerInsert"),
-    DOMString = `<div class="playerList two columns" id="${name}${players.length - 1}">
-    <h6>${name}</h6>
-    <ul>
+    DOMString = `<ul class="playerList" id="${name}${players.length - 1}">
+    <li>${name}</li>
     <li class="${name}${players.length - 1} 1"></li>
     <li class="${name}${players.length - 1} 2"></li>
     <li class="${name}${players.length - 1} 3"></li>
@@ -101,6 +100,7 @@ for (i = 0; i < players.length; i++) {
 
 function turnManager(playerID = 0) {
   let currentPlayer = players[playerID]
+  message(`${currentPlayer.playerName}'s Turn!`)
   
   // Reset buttons at beginning of turn
   if (!throwButton.classList.contains("button-primary")) {
@@ -210,4 +210,14 @@ function isGameOver() {
 
 
 
+function message(message) {
+
+  const box = document.querySelector('.message-box');
+        box.innerHTML = message;
+        box.classList.remove("hidden");
+  setTimeout(() => {
+    // box.innerHTML = ""
+    box.classList.add("hidden")
+  }, 3000)
+}
 
