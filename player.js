@@ -117,7 +117,33 @@ class Player {
     }
     // available options
     const options = this.calculateAvailableValues(currentBoard, finalHand);
+    
     // TODO evaluate if all options are false
+    console.log(options);
+    let optionChecker = 0;
+    for (let entry in options) {
+      if (entry === 'value') {
+        continue;
+      }
+      if (entry === 'sum') {
+        continue;
+      }
+      if (entry === 'bonus') {
+        continue;
+      }
+      if (options[entry] === false) {
+        optionChecker++
+      }
+    }
+    const singleValueArray = [this.gameBoard[1], this.gameBoard[2], this.gameBoard[3], this.gameBoard[4], this.gameBoard[5], this.gameBoard[6]]
+    console.log(singleValueArray);
+    singleValueArray.forEach(entry => entry !== "" ? optionChecker++ : '')
+
+    if (optionChecker === 15) {
+      return this.endTurn();
+    }
+
+    
     // const elements = document.querySelectorAll(`.${playerID}`);
     const parentElement = document.getElementById(playerID);
     // add event listeners to each single value
@@ -179,6 +205,7 @@ class Player {
             parentElement.removeEventListener("click", validater)
             // clear dice
             dice.forEach(die => die.innerHTML = "");
+            Dice.removeDiceFace();
             // end turn
             this.endTurn();
             break;
@@ -191,6 +218,7 @@ class Player {
               parentElement.removeEventListener("click", validater);
               this.gameBoard.chance = this.hand.reduce((a, b) => a + b);
               UIelement.innerHTML = this.hand.reduce((a, b) => a + b);
+              Dice.removeDiceFace();
               dice.forEach(die => die.innerHTML = "");
               this.endTurn()
             }
@@ -201,6 +229,7 @@ class Player {
             if (entry === "value") {
               continue;
             }
+            // TODO find out what causes issue with conditional
             if (entry === UIelementName && UIelement.innerHTML === "") {
               // evaluate based on string
               let evaluateIncomingString = new Conditionals().eval({key: entry, value: options[entry]}, this)
@@ -209,6 +238,8 @@ class Player {
               UIelement.innerHTML = evaluateIncomingString
               // clear dice
               dice.forEach(die => die.innerHTML = "");
+              Dice.removeDiceFace();
+
               // remove event listener
               parentElement.removeEventListener("click", validater);
               this.endTurn();
@@ -249,7 +280,7 @@ class Player {
         this.gameBoard.bonus = 50;
         bonusField.innerHTML = 50
       }
-      console.log(currentAmountToCheck);
+      // console.log(currentAmountToCheck);
       return;
   }
 
@@ -287,6 +318,7 @@ class Player {
           break;
       }
     })
+    console.log(totalAmountOfDice)
     return totalAmountOfDice
   }
 

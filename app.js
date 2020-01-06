@@ -176,6 +176,7 @@ function turnManager(playerID = 0) {
 
     if (isGameOver === true) {
       // end game functions here
+      return gameOver();
     }
     return;
   }
@@ -221,3 +222,48 @@ function message(message) {
   }, 3000)
 }
 
+
+function gameOver() {
+  // add sum to gameboard
+  players.forEach(player => {
+    console.log(player)
+    console.log(player.gameBoard)
+    let sum = 0;
+    for (entry in player.gameBoard) {
+      if (player.gameBoard[entry] === false || entry === 'sum') {
+        continue;
+      }
+      sum += Number(player.gameBoard[entry]);
+    }
+    player.gameBoard.sum = sum;
+    // add sum to UI
+    const element = document.querySelector(`.${player.playerName}${player.id}+.sum`)
+          element.innerHTML = sum;
+  })
+
+
+
+  // declare a winner
+  const sumFields = document.querySelectorAll('.sum');
+  sumFields.forEach(el => {
+    let ID = el.classList[0].slice(-1),
+        sum = el.innerHTML
+  })
+  let highestScore = 0,
+      scoreID = 0;
+  for (let entry of sumFields) {
+    let ID = entry.classList[0].slice(-1),
+        sum = entry.innerHTML
+
+    if (sum > highestScore) {
+      highestScore = sum;
+      scoreID = ID;
+    }
+  }
+  // Send winning message!
+  for (let player of players) {
+    if (player.id === scoreID) {
+      message(`Congratulations, ${player.playerName}! You won!`)
+    }
+  }
+}

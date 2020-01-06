@@ -48,4 +48,13 @@ class Dice {
         }
       }
   }
+
+  static removeDiceFace() {
+    const dice = document.querySelectorAll('.dice'),
+          classNames = ['one-face', 'two-face', 'three-face', 'four-face', 'five-face', 'six-face'];
+
+          for (let die of dice) {
+            classNames.forEach(className => die.classList.contains(className) ? die.classList.remove(className) : '')
+          }
+  }
 }
