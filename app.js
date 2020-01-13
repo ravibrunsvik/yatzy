@@ -14,7 +14,6 @@ ui.submitPlayerBtn.addEventListener('click', addPlayer);
 ui.startGameBtn.addEventListener('click', startGame, {once: true});
 // Add players to the game
 function addPlayer(e) {
-
   e.preventDefault();
   if (players.length === 9) {
     ui.sendMessage('Maximum player limit reached!')
@@ -240,7 +239,6 @@ function placeValue(e) {
     
   }
 }
-
 // Passes turn to next player
 function passTurn(player) {
   // Player to pass turn from
@@ -267,13 +265,11 @@ function passTurn(player) {
         }
 
 }
-
 // End of first turn event
 function dispatchFirst() {
   const event = new Event('EndOfFirst');
   ui.throwBtn.dispatchEvent(event);
 }
-
 // End of second turn event
 function dispatchSecond() {
   const event = new Event('EndOfSecond')
@@ -325,7 +321,6 @@ function isGameOver(playerArr) {
   })
   return state;
 }
-
 // Game ends
 function endGame(playerArr) {
   let winningSum = 0,
