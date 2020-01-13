@@ -16,6 +16,10 @@ ui.startGameBtn.addEventListener('click', startGame, {once: true});
 function addPlayer(e) {
 
   e.preventDefault();
+  if (players.length === 9) {
+    ui.sendMessage('Maximum player limit reached!')
+    return;
+  }
   let name = ui.playerNameInput.value;
   // Name must have one character
   if (name.length === 0) {
