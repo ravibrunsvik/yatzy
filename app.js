@@ -1,7 +1,7 @@
-import UI from './ui.js'
-import Player from './player.js'
-import Gameboard from './gameboard.js'
-import Conditionals from './conditionals.js';
+import UI from './js/ui.js'
+import Player from './js/player.js'
+import Gameboard from './js/gameboard.js'
+import Conditionals from './js/conditionals.js';
 // UI
 const ui = new UI();
 // Players list
