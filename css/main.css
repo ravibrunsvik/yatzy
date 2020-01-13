@@ -89,27 +89,27 @@ li {
 }
 
 .one-face {
-  background-image: url('./images/one die.png')
+  background-image: url('../images/one die.png')
 }
 
 .two-face {
-background-image: url('./images/two die.png');
+background-image: url('../images/two die.png');
 }
 
 .three-face {
-background-image: url('./images/three die.png');
+background-image: url('../images/three die.png');
 }
 
 .four-face {
-  background-image: url('./images/four die.png');
+  background-image: url('../images/four die.png');
 }
 
 .five-face {
-  background-image: url('./images/five die.png');
+  background-image: url('../images/five die.png');
 }
 
 .six-face {
-  background-image: url('./images/six die.png'); 
+  background-image: url('../images/six die.png'); 
 }
 
 .one-face, .two-face, .three-face, .four-face, .five-face, .six-face {
