@@ -44,6 +44,10 @@ export default class UI {
     this.playerInsertDiv.innerHTML += DOMString;
   }
 
+  // Clear form input field
+  clearFormInput() {
+    this.playerNameInput.value = "";
+  }
   // At end of turn, show users their score options
   showSelectionFields(ID, option, value) {
     let field = document.querySelector(`[class="${ID} ${option}"]`);
@@ -236,7 +240,7 @@ export default class UI {
   }
 
   setBonus(id) {
-    document.querySelector(`${id} bonus`).innerHTML = 50;
+    document.querySelector(`.${id}+.bonus`).innerHTML = 50;
   }
 
   setSum(id, sum) {

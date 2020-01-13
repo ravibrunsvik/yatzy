@@ -1,316 +1,264 @@
 export default class Conditionals {
 
-  // returns aray of dice with values
-  hasMoreThanOne(hand) {
-    // array of dies that have value
-    const hasValueOfOneOrMore = []
-    // loop through hand
-    for (let dice in hand) {
-      let currentDie = dice
-      let diceAmount = hand[dice]
-      // Dice has a value
-      if (diceAmount > 0) {
-        let dieThatPassesTest = {
-          die: Number(currentDie),
-          amount: diceAmount
-        }
-        // add all values that pass
-        hasValueOfOneOrMore.push(dieThatPassesTest)
-      }
+  // Check current hand
+  currentHand(hand) {
+    let resultHand = {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0
     }
-
-    return hasValueOfOneOrMore;
+    // Add dice to hand
+    for (let die in hand) {
+      // Add each die to a total
+      resultHand[hand[die]] += 1
+    }
+    return resultHand;
   }
-
-  // returns array of dice pairs
-  isAPair(hand) {
-    const isPair = [];
-
-    for (let dice in hand) {
-      let currentDie = dice,
-        diceAmount = hand[dice];
-      if (diceAmount >= 2) {
-        let dieThatPassesTest = {
-          die: Number(currentDie),
-          amount: 2
-        }
-        isPair.push(dieThatPassesTest);
-      }
-    }
-    // if there is a pair
-    if (isPair.length >= 1) {
-      return isPair;
-
-    }
-    return false;
-  }
-
-  isTwoPairs(hand) {
-    // Grab all values of 2 or more
-    const toCheck = this.isAPair(hand);
-    // only continue if 2 pairs
-    if (toCheck.length >= 2) {
-      return toCheck;
-    }
-    // if no pairs, exit
-    return false;
-  }
-
-  isThreeKind(hand) {
-    const hasValue = [];
-
-    // matches three of a kind?
-    for (let dice in hand) {
-      if (hand[dice] >= 3) {
-        // should return object instead
-        let object = {
-          die: Number(dice),
-          amount: 3
-        }
-        hasValue.push(object)
-      }
-    }
-
-    if (hasValue.length === 0) {
+  dieAmount(hand, gameboard, number) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
+    let counter = 0;
+    // If gameboard already has value, return
+    if (gameboard[number] !== "") {
       return false;
     }
-    return hasValue;
-  }
-
-  isFourKind(hand) {
-    const hasValue = [];
-
-    // matches four of a kind?
-    for (let dice in hand) {
-      if (hand[dice] >= 4) {
-        // should return object instead
-        let object = {
-          die: Number(dice),
-          amount: 4
-        }
-        hasValue.push(object)
+    // If value exists, add to counter
+    for (let die in handCopy) {
+      if (parseInt(die) === number && handCopy[die] > 0) {
+        counter = die * handCopy[die]
       }
     }
-
-    if (hasValue.length === 0) {
+    // Return false if no value
+    if (counter === 0) {
       return false;
     }
-    return hasValue;
+    // Else: return counter
+    return counter;
   }
 
-  isTinyStraight(hand) {
-    // Array should be [1, 2, 3, 4, 5];
-    let resultArr = [];
+  // All conditionals
+
+  // One pair
+  onePair(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
+    if (gameboard.onePair !== "") {
+      return false
+    }
+    // eliminate less than 2s
+    for (let die in handCopy) {
+      // If less than two, remove
+      if (handCopy[die] < 2) {
+        delete handCopy[die]
+      }
+    }
+    // Find largest
     let counter = 0;
-
-    for (let dice in hand) {
-      let currentDie = dice,
-        diceAmount = hand[dice];
-      if (diceAmount === 1) {
-        resultArr.push(Number(currentDie));
+    for (let die in handCopy) {
+      if (die > counter) {
+        counter = die * 2
       }
-
     }
-    // Array sorted
-    let sortedArray = resultArr.sort((a, b) => a - b);
-    let smallStraightArray = [1, 2, 3, 4, 5];
-
-    for (let entry in sortedArray) {
-      if (sortedArray[entry] === smallStraightArray[entry])
-        counter++
+    if (counter === 0) {
+      return false
     }
-    if (counter === 5) {
-      return true;
-    }
-    return false;
+      return parseInt(counter);
   }
+  // Two pairs
+  twoPairs(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
+    let amountOfPairs = 0;
 
-  isBigStraight(hand) {
-    // Array should be [2, 3, 4, 5, 6];
-    let resultArr = [];
+    if (gameboard.twoPair !== "") {
+      return false;
+    }
     let counter = 0;
-
-    for (let dice in hand) {
-      let currentDie = dice,
-        diceAmount = hand[dice];
-      if (diceAmount === 1) {
-        resultArr.push(Number(currentDie));
+    for (let die in handCopy) {
+      if (handCopy[die] >= 2) {
+        counter += die * 2
+        amountOfPairs++
       }
-
     }
-    // Array sorted
-    let sortedArray = resultArr.sort((a, b) => a - b);
-    let bigStraightArray = [2, 3, 4, 5, 6];
-
-    for (let entry in sortedArray) {
-      if (sortedArray[entry] === bigStraightArray[entry])
-        counter++
+    if (counter === 0 || amountOfPairs < 2) {
+      return false;
     }
-    if (counter === 5) {
-      return true;
-    }
-    return false;
+      return counter;
+    
   }
+  
+  
+  // Three of a kind
+  threeOfAKind(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
 
-  isHouse(hand) {
-    // 3 of a and 2 of b
-    // TODO: iterables fail sometimes
-    let check = [];
+    if (gameboard.threeKind !== "") {
+      return false
+    }
     let counter = 0;
-    for (let dice in hand) {
-      let currentDie = dice,
-        diceAmount = hand[dice]
-
-
-      if (diceAmount === 3 || diceAmount === 2) {
-        let object = {
-          die: Number(currentDie),
-          amount: diceAmount
-        }
-        counter += diceAmount
-        check.push(object);
+    for (let die in handCopy) {
+      if (handCopy[die] >= 3) {
+        counter += die * 3
       }
-
     }
-    if (check.length === 2 && counter === 5) {
-      return check;
+    if (counter === 0) {
+      return false;
     }
+    return counter;
+  }
+  // Four of a kind
+  fourOfAKind(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
 
-    return false;
+    if (gameboard.fourKind !== "") {
+      return false;
+    }
+    let counter = 0;
+    for (let die in handCopy) {
+      if (handCopy[die] >= 4) {
+        counter += die * 4
+      }
+    }
+    if (counter === 0) {
+      return false;
+    }
+    return counter;
+  }
+  // Yatzy
+  yatzy(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
+
+    if (gameboard.yatzy !== "") {
+      return false;
+    }
+    let counter = 0;
+    for (let die in handCopy) {
+      if (handCopy[die] >= 5) {
+        counter += die * 5
+      }
+    }
+    if (counter === 0) {
+      return false
+    }
+    return counter + 50;
+  }
+  // House
+  house(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
+
+    if (gameboard.house !== "") {
+      return false;
+    }
+    // A = 3, B = 2
+    let counter = 0;
+    let threeCount = false;
+    let twoCount = false;
+    for (let die in handCopy) {
+      // Check for dice with amount = 3
+      if (handCopy[die] === 3) {
+        counter += die * 3
+        threeCount = true;
+      }
+      // Check for dice with amount = 2
+      if (handCopy[die] === 2) {
+        counter += die * 2
+        twoCount = true;
+      }
+    }
+    if (threeCount && twoCount) {
+      // If house
+      return counter;
+    } else {
+      // If not house
+      return false;
+    }
   }
 
-  isYatzy(hand) {
-    for (let dice in hand) {
-      let diceAmount = hand[dice];
-      if (diceAmount === 5) {
-        return (dice * 5) + 50;
-      }
+  // Tiny Straight
+  tinyStraight(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
 
+    if (gameboard.tinyStraight !== "") {
+      return false;
     }
-    return false;
-  }
+    const oneCheck = handCopy[1] === 1;
+    const twoCheck = handCopy[2] === 1;
+    const threeCheck = handCopy[3] === 1;
+    const fourCheck = handCopy[4] === 1;
+    const fiveCheck = handCopy[5] === 1
 
-  isChance(hand) {
-    hand
-
-    return true;
-  }
-
-  // Checks all available options, runs at end of turn
-  runConditions(hand, gameboard) {
-    const value = this.hasMoreThanOne(hand),
-      onePair = this.isAPair(hand),
-      twoPair = this.isTwoPairs(hand),
-      threeKind = this.isThreeKind(hand),
-      fourKind = this.isFourKind(hand),
-      tinyStraight = this.isTinyStraight(hand),
-      bigStraight = this.isBigStraight(hand),
-      house = this.isHouse(hand),
-      yatzy = this.isYatzy(hand),
-      chance = this.isChance(hand);
-
-    let objectWithConditions = {
-      value: value,
-      onePair: onePair,
-      twoPair: twoPair,
-      threeKind: threeKind,
-      fourKind: fourKind,
-      tinyStraight: tinyStraight,
-      bigStraight: bigStraight,
-      house: house,
-      yatzy: yatzy,
-      chance: chance
+    if (oneCheck && twoCheck && threeCheck && fourCheck && fiveCheck) {
+      return 15;
+    } else {
+      return false;
     }
-
-
-
-    let valueCounter = 0;
-    for (let [key, value] of Object.entries(gameboard)) {
-      if (key === '1' && value !== "") {
-        valueCounter++
-      }
-      if (key === '2' && value !== "") {
-        valueCounter++
-      }
-      if (key === '3' && value !== "") {
-        valueCounter++
-      }
-      if (key === '4' && value !== "") {
-        valueCounter++
-      }
-      if (key === '5' && value !== "") {
-        valueCounter++
-      }
-      if (key === '6' && value !== "") {
-        valueCounter++
-      }
-      if (key === 'bonus' || key === 'sum') {
-        continue;
-      }
-      else {
-        if (value !== "") {
-          objectWithConditions.key = false;
-        }
-      }
-      if (valueCounter === 6) {
-        objectWithConditions.value = {die: false, amount: false};
-      }
-
-    }
-    console.log(objectWithConditions);
-    return objectWithConditions;
+    
   }
+  // Large Straight
+  bigStraight(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
 
-  eval(object, player) {
-    // Evaluate incoming object
-    let counter = 0,
-      key = object.key,
-      value = object.value
+    if (gameboard.bigStraight !== "") {
+      return false;
+    }
+    const twoCheck = handCopy[2] === 1;
+    const threeCheck = handCopy[3] === 1;
+    const fourCheck = handCopy[4] === 1;
+    const fiveCheck = handCopy[5] === 1
+    const sixCheck = handCopy[6] === 1
 
-    switch (key) {
-      case ('onePair'):
-        // iterate for each
-        // hold on to biggest die
-        for (let entry of value) {
-          entry.die > counter ? counter = entry.die : ''
-        }
-        return counter * 2
-      case ('twoPair'):
-        // combine dies
-        for (let entry of value) {
-          counter += entry.die
-        }
-        return counter * 2
-      case ('threeKind'):
-        for (let entry of value) {
-          counter = entry.die
-        }
-        return (counter * 3)
-      case ('fourKind'):
-        for (let entry of value) {
-          counter = entry.die
-        }
-        return counter * 4
-      case ('yatzy'):
-        counter = value;
-        return counter
-
-      case ('tinyStraight'):
-        return 15;
-      case ('bigStraight'):
-        return 20;
-
-      case ('house'):
-        for (let entry of value) {
-          counter += Number(entry.die) * Number(entry.amount)
-        }
-        return counter;
-      case ('chance'):
-        counter = player.hand.reduce((a, b) => a + b)
-        return counter;
-      default:
-        break;
+    if (twoCheck && threeCheck && fourCheck && fiveCheck && sixCheck) {
+      return 20;
+    } else {
+      return false;
     }
   }
+  // Chance
+  chance(hand, gameboard) {
+    let handCopy = JSON.parse(JSON.stringify(hand))
+
+    if (gameboard.chance !== "") {
+      return false;
+    } 
+    // Return 
+    let counter = 0;
+    // Add dice together
+    for (let die in handCopy) {
+      if (handCopy[die] > 0) {
+        // Die * amount
+        counter += parseInt(die) * parseInt(handCopy[die])
+      }
+    }
+    return counter;
+  }
+
+  // Run check
+  testConditions(hand, gameboard) {
+    let object = {
+      1: this.dieAmount(hand, gameboard, 1),
+      2: this.dieAmount(hand, gameboard, 2),
+      3: this.dieAmount(hand, gameboard, 3),
+      4: this.dieAmount(hand, gameboard, 4),
+      5: this.dieAmount(hand, gameboard, 5),
+      6: this.dieAmount(hand, gameboard, 6),
+      // hasOneOrMore: this.hasOneOrMore(hand, gameboard),
+      onePair: this.onePair(hand, gameboard),
+      twoPair: this.twoPairs(hand, gameboard),
+      threeKind: this.threeOfAKind(hand, gameboard),
+      fourKind: this.fourOfAKind(hand, gameboard),
+      tinyStraight: this.tinyStraight(hand, gameboard),
+      bigStraight: this.bigStraight(hand, gameboard),
+      house: this.house(hand, gameboard),
+      chance: this.chance(hand, gameboard),
+      yatzy: this.yatzy(hand, gameboard)
+    }
+    // Remove false options
+    for (let entry in object) {
+      if (object[entry] === false) {
+        delete object[entry]
+      }
+    }
+    return object;
+  } 
 
 }
