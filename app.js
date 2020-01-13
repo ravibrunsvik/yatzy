@@ -47,14 +47,15 @@ function addPlayer(e) {
 } 
 
 // Runs once when game starts
-function startGame() {
+function startGame(e) {
+  e.preventDefault();
   // Hide player entry form
   ui.hideForm();
   // Show dice and turn buttons
   ui.showGameControls();
 }
 // Handles a player's turn
-function turnManager(e) {
+function turnManager() {
   // Message whose turn it is
   ui.sendMessage(`${this.playerName}'s Turn!`);
   // Clear dice
