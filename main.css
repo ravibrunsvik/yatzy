@@ -1,7 +1,3 @@
-/* * {
-  margin: 0px; 
-  padding: 0px;
-} */
 :root {
   --list-selected: rgb(67, 173, 90);
   --board-width: 500px;
@@ -128,25 +124,13 @@ background-image: url('./images/three die.png');
   background-color: var(--list-selected)
 }
 .selected-field {
-  background-color: var(--list-selected)
-}
-
-
-
-.dice {
-  /* margin-top: 10px; */
-  /* display: inline-block; */
+  background-color: var(--list-selected);
+  color: yellow;
 }
 
 .output {
   padding: 5px 0 0 30px;
-  /* position: absolute; */
-  /* top: 5px; */
-  /* right: 5px; */
-  /* left: 500px; */
-  /* bottom: 740px; */
 }
-
 
 .flex {
   display: flex;

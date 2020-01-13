@@ -20,14 +20,17 @@ export default class Conditionals {
   dieAmount(hand, gameboard, number) {
     let handCopy = JSON.parse(JSON.stringify(hand))
     let counter = 0;
+    let dieType = 0;
     // If gameboard already has value, return
     if (gameboard[number] !== "") {
       return false;
     }
     // If value exists, add to counter
     for (let die in handCopy) {
+      console.log(die)
+      console.log(handCopy[die])
       if (parseInt(die) === number && handCopy[die] > 0) {
-        counter++
+        counter = die * handCopy[die]
       }
     }
     // Return false if no value
@@ -80,7 +83,7 @@ export default class Conditionals {
         amountOfPairs++
       }
     }
-    if (counter === 0 && amountOfPairs < 2) {
+    if (counter === 0 || amountOfPairs < 2) {
       return false;
     }
       return counter;
@@ -138,7 +141,7 @@ export default class Conditionals {
     if (counter === 0) {
       return false
     }
-    return counter;
+    return counter + 50;
   }
   // House
   house(hand, gameboard) {
@@ -240,7 +243,7 @@ export default class Conditionals {
       6: this.dieAmount(hand, gameboard, 6),
       // hasOneOrMore: this.hasOneOrMore(hand, gameboard),
       onePair: this.onePair(hand, gameboard),
-      twoPairs: this.twoPairs(hand, gameboard),
+      twoPair: this.twoPairs(hand, gameboard),
       threeKind: this.threeOfAKind(hand, gameboard),
       fourKind: this.fourOfAKind(hand, gameboard),
       tinyStraight: this.tinyStraight(hand, gameboard),

@@ -28,7 +28,7 @@ export default class UI {
     <li class="${name}${id} 6"></li>
     <li class="${name}${id} bonus"></li>
     <li class="${name}${id} onePair"></li>
-    <li class="${name}${id} twoPairs"></li>
+    <li class="${name}${id} twoPair"></li>
     <li class="${name}${id} threeKind"></li>
     <li class="${name}${id} fourKind"></li>
     <li class="${name}${id} tinyStraight"></li>
@@ -44,13 +44,32 @@ export default class UI {
     this.playerInsertDiv.innerHTML += DOMString;
   }
 
-  insertSelectionFields(ID, option) {
-    console.log(ID)
-    console.log(option)
+  // At end of turn, show users their score options
+  showSelectionFields(ID, option, value) {
     let field = document.querySelector(`[class="${ID} ${option}"]`);
-    console.log(field);
     field.classList.add("selected-field");
+    // Present value change to field
+    field.innerHTML = value;
   }
+
+  // Clear up UI after option is selected
+  removeSelectedFromFields() {
+    let fieldsToClear = document.querySelectorAll('.selected-field');
+    fieldsToClear.forEach(field => field.classList.remove("selected-field"))
+  }
+  // Remove values from all temp fields
+  removeTempValues(gameboard, id) {
+    // Iterate through gameboard entries
+    for (let entry in gameboard) {
+      if (gameboard[entry] === "") {
+        // Value was placeholder, remove it
+        let field = document.querySelector(`[class="${id} ${entry}"]`)
+        field.innerHTML = ""
+      }
+
+    }
+  }
+
 
   // Display message to user
   sendMessage(message) {
@@ -200,6 +219,16 @@ export default class UI {
             for (let die of dice) {
               classNames.forEach(className => die.classList.contains(className) ? die.classList.remove(className) : '')
             }
+    }
+
+    clearDiceValues() {
+      for (let die of this.dice) {
+        die.innerHTML = "";
+      }
+    }
+
+    setBonus(id) {
+      document.querySelector(`${id} bonus`).innerHTML = 50;
     }
 
 
