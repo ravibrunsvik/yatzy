@@ -5,7 +5,7 @@
   --background-color: rgb(113, 113, 113);
   --dice-selected: rgb(72, 173, 117);
   --box-shadow: 0px 0px 5px 1px #423b3b66;
-  --text-color: #383838;
+  --text-color: #000;
 }
 
 body {
