@@ -14,11 +14,6 @@ body {
   color: var(--text-color)
 }
 
-h1 {
-  /* color: #eee */
-
-}
-
 .message-box {
   height: 40px;
   width: var(--board-width);
