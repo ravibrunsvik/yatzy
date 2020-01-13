@@ -4,7 +4,7 @@ import Gameboard from './gameboard.js'
 import Conditionals from './conditionals.js';
 // UI
 const ui = new UI();
-// Players
+// Players list
 let players = [];
 
 // Event listeners
@@ -12,9 +12,7 @@ let players = [];
 ui.submitPlayerBtn.addEventListener('click', addPlayer);
 // Start game event
 ui.startGameBtn.addEventListener('click', startGame, {once: true});
-
-
-
+// Add players to the game
 function addPlayer(e) {
 
   e.preventDefault();
@@ -48,15 +46,14 @@ function addPlayer(e) {
   ui.showStartBtn();
 } 
 
-
+// Runs once when game starts
 function startGame() {
-  ui.sendMessage(`${players[0].playerName}'s turn!`)
   // Hide player entry form
   ui.hideForm();
   // Show dice and turn buttons
   ui.showGameControls();
 }
-
+// Handles a player's turn
 function turnManager(e) {
   // Message whose turn it is
   ui.sendMessage(`${this.playerName}'s Turn!`);
@@ -239,8 +236,6 @@ function placeValue(e) {
   }
 }
 
-
-
 // Passes turn to next player
 function passTurn(player) {
   // Player to pass turn from
@@ -303,7 +298,7 @@ function checkForBonus(gameboard, id) {
   // Update UI to reflect change
 
 }
-
+// Game over check
 function isGameOver(playerArr) {
   // State of the game
   let state;
@@ -359,6 +354,4 @@ function endGame(playerArr) {
   })
   // Declare a winner
   ui.sendMessage(`The winner is ${winner}, with a total of ${winningSum} points!`)
-
-  // Add replay game button
 }
