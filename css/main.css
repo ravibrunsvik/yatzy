@@ -46,7 +46,7 @@ body {
 li {
   list-style-type: none;
   width:45px;
-  height: 35px;
+  height: 30px;
   font-weight: bold;
 }
 
@@ -55,14 +55,14 @@ li {
 }
 
 .itemList li {
-  width: 116px;  
+  width: 112px;  
   padding: 0 5px;
 
 }
 
 .playerList li {
   text-align: center;
-
+  text-transform: uppercase;
 }
 
 .playerList li, .itemList li {
