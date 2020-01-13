@@ -1,4 +1,4 @@
-class Gameboard {
+export default class Gameboard {
  // instantiate gameboard
   static fiveDie() {
     const gameBoard = {
@@ -11,10 +11,10 @@ class Gameboard {
       bonus: false,
       onePair: "",
       twoPair: "",
-      threeOfAKind: "",
-      fourOfAKind: "",
-      smallStraight: "",
-      largeStraight: "",
+      threeKind: "",
+      fourKind: "",
+      tinyStraight: "",
+      bigStraight: "",
       house: "",
       chance: "",
       yatzy: "",

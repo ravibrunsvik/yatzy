@@ -19,15 +19,15 @@
         <div class="flex">
           <form id="playerform">
             <label for="name">Choose name</label>
-            <input type="text" name="name" id="name" placeholder="Enter initials">
+            <input type="text" name="name" id="name" placeholder="Enter initials" value="">
             <input type="submit" value="Add player" class="" id="submit">
-            <input type="button" value="Start game" class="button-primary" id="start" style="display: none;">
+            <input type="button" value="Start game" class="button-primary hidden" id="start">
           </form>
         
         </div>
           
       </div>
-      <div class="flex mainBoard" style="visibility: hidden;">
+      <div class="flex mainBoard hidden">
 
         <div class="gameboard" id="gameboard">
           <div class="itemNames">
@@ -55,26 +55,22 @@
           </div>
         </div>
           <div class="playerNames flex" id="playerInsert">
-      </div>
+          </div>
       <div class="output flex-container"> 
-        <ul class="diceList">
-          <li class="dice 0"></li>
+        <ul class="diceList hidden">
           <li class="dice 1"></li>
           <li class="dice 2"></li>
           <li class="dice 3"></li>
           <li class="dice 4"></li>
+          <li class="dice 5"></li>
         </ul>
-        <div class="flex-container">
+        <div class="flex-container buttons">
     
-          <button id="throw" class="button-primary" disabled>Throw</button>
-          <button id="endTurn">End turn</button>
+          <button id="throw" class="button-primary hidden">Throw</button>
+          <button id="endTurn" class="hidden">End turn</button>
         </div>
       </div>
     </div>
-  <script src="player.js"></script>
-  <script src="conditionals.js""></script>
-  <script src="dice.js""></script>
-  <script src="gameboard.js"></script>
-  <script src="app.js"></script>
+  <script src="appv2.js" type="module"></script>
 </body>
 </html>

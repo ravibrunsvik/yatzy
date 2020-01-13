@@ -22,12 +22,17 @@ body {
   /* transition-duration: 2s; */
   text-align: center;
   font-size: 20px;
+  transition-duration: 0.2s;
 }
 
 .hidden {
-  transition-duration: 2s;
+  transition-duration: 0.2s;
   opacity: 0;
   visibility: hidden;
+}
+
+.no-display {
+  display: none;
 }
 
 .mainBoard {
@@ -120,6 +125,9 @@ background-image: url('./images/three die.png');
 }
 
 .selected {
+  background-color: var(--list-selected)
+}
+.selected-field {
   background-color: var(--list-selected)
 }
 

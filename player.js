@@ -1,25 +1,29 @@
-class Player {
+export default class Player {
   constructor(playerName) {
     this.playerName = playerName;
     this.options = {
       maxTurns: 3,
       turnCount: 1,
       previousHand: {}
-    }
+    },
+    this.id;
   }
 
    // Custom turn events
+  //  First turn over
   dispatchFirst() {
     let throwBtn = document.querySelector("#throw")
     event = new Event('first');
     return throwBtn.dispatchEvent(event)
-    
   }
+  // Second turn over
   dispatchSecond() {
     let throwBtn = document.querySelector("#throw")
     event = new Event('second');
       return throwBtn.dispatchEvent(event)
-    }
+  }
+
+  // Turns
   takeTurn(e, turnCount = 1, turnsLeft = 2) {
     let UIdice = document.querySelectorAll(".dice"),
         UIselected = document.querySelectorAll(".selected"),
@@ -27,7 +31,9 @@ class Player {
         hand = [],
         throwBtn = document.querySelector('#throw')
     
+    // On first turn
     if (turnCount === 1) {
+      // Remove all items with
       UIselected.forEach(el => el.classList.contains("selected") ? el.classList.remove("selected") : '')
       // roll dice
       hand = dice.roll();
@@ -44,6 +50,7 @@ class Player {
       return throwBtn.addEventListener('click', this.dispatchFirst, {once: true})
     }
 
+    // Second and third turn
     // Save dice from last turn, add new dice in saved indexes.
     if (turnCount !== 1) {
       // indexed dice
@@ -79,26 +86,32 @@ class Player {
       }
     }
 
-    // what turn is it?
+    // Second turn
     if (turnCount === 2) {
+      // Set dice images
       Dice.setDiceFace()
       // cleanup event listeners
       throwBtn.addEventListener('click', this.dispatchSecond, {once: true})
       return throwBtn.removeEventListener('click', this.dispatchFirst, {once: true})
     }
 
+    // Third turn
     if (turnCount === 3) {
+      // Set dice images
       Dice.setDiceFace()
       // cleanup event listeners
       return throwBtn.removeEventListener('click', this.dispatchSecond, {once: true})
     }
   }
+
+  // Toggles held dice
   holdOnToDie(e) {
     if (!e.target.classList.contains("selected")) {
       e.target.classList.add("selected");
     } else e.target.classList.remove("selected")
   } 
   
+  // End of turn 
   scoreRefactor(e) {
     // final hand
     const playerID = `${this.playerName}${this.id}`,
@@ -118,45 +131,22 @@ class Player {
     // available options
     const options = this.calculateAvailableValues(currentBoard, finalHand);
     
-    // TODO evaluate if all options are false
-    console.log(options);
-    let optionChecker = 0;
-    for (let entry in options) {
-      if (entry === 'value') {
-        continue;
-      }
-      if (entry === 'sum') {
-        continue;
-      }
-      if (entry === 'bonus') {
-        continue;
-      }
-      if (options[entry] === false) {
-        optionChecker++
-      }
-    }
-    const singleValueArray = [this.gameBoard[1], this.gameBoard[2], this.gameBoard[3], this.gameBoard[4], this.gameBoard[5], this.gameBoard[6]]
-    console.log(singleValueArray);
-    singleValueArray.forEach(entry => entry !== "" ? optionChecker++ : '')
-
-    if (optionChecker === 15) {
-      return this.endTurn();
-    }
-
-    
     // const elements = document.querySelectorAll(`.${playerID}`);
+    // Parent element to add event listener to
     const parentElement = document.getElementById(playerID);
     // add event listeners to each single value
+    // Every value with a class of selected-field will be listened for
     for (let entry of options.value) {
       // get single value die element
       let element = document.querySelector(`[class^='${playerID} ${entry.die}']`);
       // Squary is empty and can be filled in
       if (element.innerHTML === "") {
-        element.classList.add("selected");
+        element.classList.add("selected-field");
       }
       
     }
 
+    // 
     for (let entry in options) {
       let element = document.querySelector(`[class^="${playerID} ${entry}"]`)
     // Option is not available, continue
@@ -169,7 +159,7 @@ class Player {
       }
       // All other options get event listener
         if (element.innerHTML === "") {
-          element.classList.add("selected");
+          element.classList.add("selected-field");
         }
     }
 
@@ -178,10 +168,12 @@ class Player {
       const UIelementName = e.target.classList[1],
             UIelement = e.target,
             parentElement = e.target.parentElement.parentElement,
-            dice = document.querySelectorAll(".dice");
-
+            dice = document.querySelectorAll(".dice"),
+            finalHand = this.getFinalHand(this.hand),
+            currentBoard = this.gameBoard,
+            options = this.calculateAvailableValues(currentBoard, finalHand);
       // If element clicked is not among candidates, try again
-      if (!UIelement.classList.contains("selected")) {
+      if (!UIelement.classList.contains("selected-field")) {
         // TODO: add message to UI
 
       }
@@ -196,6 +188,7 @@ class Player {
         case('5'):
         case('6'):
         for (let entry of options.value) {
+          // If entry is the same as element and available
           if (entry.die.toString() === UIelementName && UIelement.innerHTML === "") {
             // add value to UI
             UIelement.innerHTML = entry.die * entry.amount;
@@ -226,6 +219,7 @@ class Player {
         default:
               // complex value check
           for (let entry in options) {
+            // skip single value items
             if (entry === "value") {
               continue;
             }
@@ -234,8 +228,8 @@ class Player {
               // evaluate based on string
               let evaluateIncomingString = new Conditionals().eval({key: entry, value: options[entry]}, this)
               // add to board and UI
-              this.gameBoard[entry] = evaluateIncomingString
-              UIelement.innerHTML = evaluateIncomingString
+              this.gameBoard[entry] = evaluateIncomingString;
+              UIelement.innerHTML = evaluateIncomingString;
               // clear dice
               dice.forEach(die => die.innerHTML = "");
               Dice.removeDiceFace();
@@ -269,7 +263,7 @@ class Player {
   
 
   isBonus() {
-    const bonusField = document.querySelector(`.${this.playerName}${this.id} .bonus`)
+    const bonusField = document.querySelector(`.${this.playerName}${this.id}+.bonus`)
 
     if (this.gameBoard.bonus !== false) {
       return;
@@ -318,7 +312,6 @@ class Player {
           break;
       }
     })
-    console.log(totalAmountOfDice)
     return totalAmountOfDice
   }
 
@@ -326,9 +319,34 @@ class Player {
       // Set up tests
       const test = new Conditionals()
       // Available choices
-      const choices = test.runConditions(finalHand);
+      const choices = test.runConditions(finalHand, gameBoard);
+
       return choices
 
   }
+
+  // noAvailableValues() {
+  //   console.log(this);
+  //   const currentPlayerID = `${this.playerName}${this.id}`;
+  //   const board = document.getElementById(currentPlayerID);
+  //   const boardItems = document.querySelectorAll(`.${currentPlayerID}:not(.bonus):not(sum)`);
+
+  //   // Select items to be sacrificed
+  //   boardItems.forEach(item => item.innerHTML === "" ? item.classList.add("selected") : '');
+
+
+  //   const placeSacrifices = placeSacrifice().bind(this);
+  //   board.addEventListener('click', placeSacrifices);
+
+
+  //   function placeSacrifice(e) {
+  //     if (e.target.classList.contains("selected")) {
+  //       e.target.innerHTML = 0;
+  //       board.removeEventListener("click", placeSacrifices)
+  //       this.endTurn();
+  //     }
+  //   }
+  // }
+
 }
 
