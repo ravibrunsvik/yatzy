@@ -130,6 +130,14 @@ export default class UI {
   }
 
   // UI State changes
+  sacrificeSpace(id) {
+    // Every field except bonus and sum
+    let fieldList = document.querySelectorAll(`.${id}:not(.bonus):not(.sum)`);
+    // Add "Selected" to all fields
+    fieldList.forEach(field => field.innerHTML === "" ? 
+    field.classList.add("selected-field") 
+    : '')
+  }
 
   // Removes selected hue from player-list
   clearSelected() {
@@ -211,25 +219,33 @@ export default class UI {
         }
     }
   
-    removeDiceFace() {
-      const dice = this.dice,
-            classNames = this.diceClassNames;
-  
-            // Remove all dice class names
-            for (let die of dice) {
-              classNames.forEach(className => die.classList.contains(className) ? die.classList.remove(className) : '')
-            }
-    }
+  removeDiceFace() {
+    const dice = this.dice,
+          classNames = this.diceClassNames;
 
-    clearDiceValues() {
-      for (let die of this.dice) {
-        die.innerHTML = "";
-      }
-    }
+          // Remove all dice class names
+          for (let die of dice) {
+            classNames.forEach(className => die.classList.contains(className) ? die.classList.remove(className) : '')
+          }
+  }
 
-    setBonus(id) {
-      document.querySelector(`${id} bonus`).innerHTML = 50;
+  clearDiceValues() {
+    for (let die of this.dice) {
+      die.innerHTML = "";
     }
+  }
+
+  setBonus(id) {
+    document.querySelector(`${id} bonus`).innerHTML = 50;
+  }
+
+  setSum(id, sum) {
+    // Get field by ID
+    const field = document.querySelector(`.${id}+.sum`);
+    // Insert to board
+    field.innerHTML = sum;
+    
+  }
 
 
 }

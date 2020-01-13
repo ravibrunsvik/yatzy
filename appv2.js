@@ -71,7 +71,8 @@ function turnManager(e) {
   const turnOne = firstTurn.bind(this),
         turnTwo = secondTurn.bind(this),
         turnThree = thirdTurn.bind(this),
-        turnFinal = finalizeTurn.bind(this);
+        turnFinal = finalizeTurn.bind(this),
+        sacrifice = sacrificeSpace.bind(this);
   // Event listeners
   // First turn
   ui.throwBtn.addEventListener('click', turnOne, {once: true})
@@ -94,7 +95,7 @@ function turnManager(e) {
       // Add hold dice event listeners
       ui.diceHold();
       // Add second throw event listener
-      ui.throwBtn.addEventListener('click', dispatchFirst, {once: true})
+      ui.throwBtn.addEventListener('click', dispatchFirst)
       // End turn button
       ui.endTurnBtn.addEventListener('click', turnFinal);
       // Remove event listener
@@ -111,7 +112,8 @@ function turnManager(e) {
       // Set dice image
       ui.setDiceFace()
       // Remove Event listener
-      ui.throwBtn.removeEventListener('EndOfFirst', turnTwo)
+      ui.throwBtn.removeEventListener('EndOfFirst', turnTwo);
+      ui.throwBtn.removeEventListener('click', dispatchFirst);
       ui.throwBtn.addEventListener('click', dispatchSecond);
 
     }
@@ -126,39 +128,68 @@ function turnManager(e) {
       ui.removeDiceFace()
       // Set dice image
       ui.setDiceFace()
-
-      
-      // Remove event listeners
-      ui.throwBtn.removeEventListener("EndOfSecond", turnThree)
-      ui.throwBtn.removeEventListener("click", dispatchSecond)
-      
+      // Finalize turn
       turnFinal(this);
     }
 
     // Finalizes turn, ready to put score in board
     function finalizeTurn(e) {
+      console.log("turn ended")
       // Remove end turn event
       ui.endTurnBtn.removeEventListener('click', turnFinal);
+      ui.throwBtn.removeEventListener('EndOfFirst', turnTwo)
+      ui.throwBtn.removeEventListener('EndOfSecond', turnThree)
+      ui.throwBtn.removeEventListener('click', dispatchFirst)
+      ui.throwBtn.removeEventListener('click', dispatchSecond)
       // Current player ID for field matching
       const ID = `${this.playerName}${this.id}`
-      console.log("turn ended")
       // Conditional logic
       const conditionals = new Conditionals();
       // Final hand
       const handToEval = conditionals.currentHand(this.hand);
       // Get options 
       const options = conditionals.testConditions(handToEval, this.gameBoard);
-      // Show available options in UI
-      for (let i in options) {
-        ui.showSelectionFields(ID, i, options[i])
-      }
       // Parent element
       const parentElement = document.querySelector(`#${ID}`)
-      // Add event listener to parentElement
-      // Needs to persist, find a variable
-      parentElement.addEventListener('click', placeValue);
+
+      // Evaluate length of available options
+      const length = Object.keys(options).length;
+      if (length === 0) {
+        // Add sacrifice options to UI
+        ui.sacrificeSpace(ID)
+        // No options available, sacrifice a space
+        parentElement.addEventListener('click', sacrifice);
+      } else {
+        // Show available options in UI
+        for (let i in options) {
+          ui.showSelectionFields(ID, i, options[i])
+        }
+        // Add event listener to parentElement
+        // Needs to persist, find a variable
+        parentElement.addEventListener('click', placeValue);
+      }
     }
 
+    // Player has no availabe options, sacrifices a space
+    function sacrificeSpace(e) {
+      // Get player ID
+      const ID = `${this.playerName}${this.id}`,
+            field = e.target.classList[1],
+            curPlayer = players[ID.slice(-1)];
+      // Click target is available for sacrifice, and is not bonus or sum
+      if (e.target.classList.contains("selected-field") && !e.target.classList.contains("sum") && !e.target.classList.contains("bonus")) {
+        // Update player gameboard
+        this.gameBoard[field] = 0;
+        // Update UI
+        e.target.innerHTML = 0;
+        // Clear field colors
+        ui.removeSelectedFromFields();
+        // remove event listener
+        e.target.parentElement.removeEventListener('click', placeValue);
+        // Pass turn to next player
+        passTurn(curPlayer)
+      }
+    }
 
 }
 // Update player hand
@@ -197,9 +228,9 @@ function placeValue(e) {
   // User selects available option
   if (e.target.classList.contains("selected-field")) {
     // Remove Event listener
-    const value = parseInt(e.target.innerHTML)
     e.target.parentElement.removeEventListener('click', placeValue)
     // Add value to player's board
+    const value = parseInt(e.target.innerHTML)
     curPlayer.gameBoard[field] = value;
     // Clear selected field color
     ui.removeSelectedFromFields();
@@ -214,6 +245,9 @@ function placeValue(e) {
     
   }
 }
+
+
+
 // Passes turn to next player
 function passTurn(player) {
   // Player to pass turn from
@@ -221,8 +255,13 @@ function passTurn(player) {
         firstPlayer = players[0],
         lastPlayer = (players.length-1),
         id = curPlayer.id;
-    let nextTurn;
+    let nextTurn,
+        gameState = isGameOver(players);
 
+        // Check if game is over
+        if (gameState === true) {
+          return endGame(players);
+        }
         // Check if ID is last in array
         if (id === lastPlayer) {
           console.log("beginning")
@@ -248,7 +287,7 @@ function dispatchSecond() {
   const event = new Event('EndOfSecond')
   ui.throwBtn.dispatchEvent(event);
 }
-
+// Check if player has earned bonus
 function checkForBonus(gameboard) {
   // Check if gameboard grants bonus
   const one = parseInt(gameboard[1]),
@@ -270,4 +309,60 @@ function checkForBonus(gameboard) {
   }
   // Update UI to reflect change
 
+}
+
+function isGameOver(playerArr) {
+  // State of the game
+  let state;
+  // Check each player's arr
+  playerArr.forEach(player => {
+    for (let entry in player.gameBoard) {
+      if (player.gameBoard[entry] === "") {
+        state = false;
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+  })
+  return state;
+}
+
+// Game ends
+function endGame(playerArr) {
+  console.log(playerArr);
+  let winningSum = 0,
+      winner;
+
+  // Place total score in sum fields
+  playerArr.forEach(player => {
+    // Reset sum
+    let sum = 0;
+    for (let entry in player.gameBoard) {
+      // handle empty bonus
+      if (player.gameBoard[entry] === "") {
+        player.gameBoard[entry] = 0
+      }
+      // Add sum together
+      sum += parseInt(player.gameBoard[entry]);
+    }
+    // Add sum to gameboard
+    player.gameboard.sum = sum;
+    // Update UI
+    ui.setSum(`${player.playerName}${player.id}`, sum)
+  })
+  // Loop through players to find the highest score
+  playerArr.forEach(player => {
+    if (player.gameboard.sum > winningSum) {
+      // Set winner name
+      winner = player.playerName,
+      // Set winning sum
+      winningSum = player.gameboard.sum
+    }
+  })
+  // Declare a winner
+  ui.sendMessage(`The winner is ${winner}, with a total of ${winningSum} points!`)
+
+  // Add replay game button
 }

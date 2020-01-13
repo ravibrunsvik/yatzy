@@ -8,7 +8,7 @@ export default class Gameboard {
       4: "",
       5: "",
       6: "",
-      bonus: false,
+      bonus: "",
       onePair: "",
       twoPair: "",
       threeKind: "",

@@ -27,8 +27,6 @@ export default class Conditionals {
     }
     // If value exists, add to counter
     for (let die in handCopy) {
-      console.log(die)
-      console.log(handCopy[die])
       if (parseInt(die) === number && handCopy[die] > 0) {
         counter = die * handCopy[die]
       }
