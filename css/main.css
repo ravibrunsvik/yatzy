@@ -1,6 +1,7 @@
 :root {
   --list-selected: rgb(67, 173, 90);
   --board-width: 500px;
+  --border-radius: 10px;
 }
 
 body {
@@ -32,7 +33,7 @@ body {
 }
 
 .mainBoard {
-  background-color: gray;
+  /* background-color: gray; */
   width: var(--board-width);
   position: relative;
 }
@@ -62,12 +63,28 @@ li {
   /* background: rgb(155, 155, 155); */
   margin: 0px;
   border: 1px rgb(187, 187, 187) solid;
-  color: #e2e2e2;
   text-shadow: black 0.5px 0.5px;
+  color: #e2e2e2;
+  padding: 0 0 0 5px;
+}
+
+.playerNames ul:last-child li:first-child {
+  border-top-right-radius: var(--border-radius);
+}
+.playerNames ul:last-child li:last-child {
+  border-bottom-right-radius: var(--border-radius);
 }
 
 .diceList {
   display: inline-block;
+}
+
+.itemList li:first-child {
+  border-top-left-radius: var(--border-radius);
+}
+
+.itemList li:last-child {
+  border-bottom-left-radius: var(--border-radius)
 }
 
 .dice {
@@ -123,7 +140,7 @@ background-image: url('../images/three die.png');
 .selected {
   background-color: var(--list-selected)
 }
-.selected-field {
+.playerList .selected-field {
   background-color: var(--list-selected);
   color: yellow;
 }
