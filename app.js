@@ -52,6 +52,8 @@ function addPlayer(e) {
 // Runs once when game starts
 function startGame(e) {
   e.preventDefault();
+  // Hide play again button
+  ui.hideReset();
   // Hide player entry form
   ui.hideForm();
   // Show dice and turn buttons
@@ -232,7 +234,7 @@ function placeValue(e) {
     ui.removeTempValues(curPlayer.gameBoard, ID);
     // Check for bonus
     if (checkForBonus(curPlayer.gameBoard, ID)) {
-      ui.setbonus(ID)
+      ui.setBonus(ID)
     }
     // Pass turn to next player
     passTurn(curPlayer);
@@ -307,14 +309,14 @@ function isGameOver(playerArr) {
   playerArr.forEach(player => {
     for (let entry in player.gameBoard) {
       // skip Bonus field
-      if (entry === "bonus") {
+      if (entry === "bonus" || entry === "sum") {
         continue;
       }
       if (player.gameBoard[entry] === "") {
         state = false;
-        return false;
+        return state;
       } else {
-        return true;
+        state = true;
       }
     }
 
@@ -339,19 +341,50 @@ function endGame(playerArr) {
       sum += parseInt(player.gameBoard[entry]);
     }
     // Add sum to gameboard
-    player.gameboard.sum = sum;
+    player.gameBoard.sum = sum;
     // Update UI
     ui.setSum(`${player.playerName}${player.id}`, sum)
   })
   // Loop through players to find the highest score
   playerArr.forEach(player => {
-    if (player.gameboard.sum > winningSum) {
+    if (player.gameBoard.sum > winningSum) {
       // Set winner name
-      winner = player.playerName,
+      winner = player.playerName;
       // Set winning sum
-      winningSum = player.gameboard.sum
+      winningSum = player.gameBoard.sum;
     }
   })
   // Declare a winner
-  ui.sendMessage(`The winner is ${winner}, with a total of ${winningSum} points!`)
+  ui.sendMessage(`The winner is ${winner}, with a total of ${winningSum} points!`);
+
+  // Play again options
+
+  // Hide player controls
+  ui.hideGameControls();
+  // Show player form
+  ui.showForm();
+  // Show play again button
+  ui.showReset();
+  // Play again event listener
+  ui.playAgainBtn.addEventListener('click', restartGame, {once: true})
+
+}
+
+function restartGame() {
+  // Hide reset field
+  ui.hideReset();
+  // Reset game
+  players.forEach(player => {
+    // Clear out gameboard
+    player.gameboard = Gameboard.fiveDie();
+  })
+  // Clear fields from UI
+  ui.clearAllGameBoards();
+
+  // Bind turn
+  const boundTurn = turnManager.bind(players[0]);
+  // Set event for start game
+  ui.startGameBtn.addEventListener('click', boundTurn, {once: true})
+
+
 }

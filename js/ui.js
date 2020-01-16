@@ -3,6 +3,7 @@ export default class UI {
     this.mainboard = document.querySelector('.mainBoard')
     this.gameboard = document.querySelector('.gameboard');
     this.playerInsertDiv = document.getElementById("playerInsert");
+    this.playerLists = document.querySelectorAll('.playerList')
     this.diceList = document.querySelector('.diceList');
     this.dice = document.querySelectorAll('.dice')
     this.throwBtn = document.getElementById("throw");
@@ -11,8 +12,9 @@ export default class UI {
     this.startGameBtn = document.getElementById("start");
     this.playerNameInput = document.getElementById("name");
     this.messageBox = document.querySelector('.message-box');
-    this.diceClassNames = ['one-face', 'two-face', 'three-face', 'four-face', 'five-face', 'six-face'],
-    this.playerForm = document.querySelector('#playerform')
+    this.diceClassNames = ['one-face', 'two-face', 'three-face', 'four-face', 'five-face', 'six-face'];
+    this.playerForm = document.querySelector('#playerform');
+    this.playAgainBtn = document.querySelector('#reset');
   }
 
   // Insert players in board
@@ -74,6 +76,19 @@ export default class UI {
     }
   }
 
+  // Clear gameboards after game end
+  clearAllGameBoards() {
+    let IDs = [];
+    this.playerLists.forEach(player => {
+      IDs.push(player.id)
+    })
+
+    IDs.forEach(id => {
+      document.querySelectorAll(`.${id}`).forEach(element => {
+        element.innerHTML = "";
+      })
+    })
+  }
 
   // Display message to user
   sendMessage(message) {
@@ -133,6 +148,15 @@ export default class UI {
     this.playerForm.classList.remove("no-display")
   }
 
+  showReset() {
+    this.playAgainBtn.classList.remove("hidden");
+  }
+
+  hideReset() {
+    if (!this.playAgainBtn.classList.contains("hidden"))
+    this.playAgainBtn.classList.add("hidden");
+  }
+
   // UI State changes
   sacrificeSpace(id) {
     // Every field except bonus and sum
@@ -161,6 +185,20 @@ export default class UI {
         item.innerHTML = option;
       }
     })
+  }
+
+  // Insert bonus
+  setBonus(id) {
+    document.querySelector(`.${id}+.bonus`).innerHTML = 50;
+  }
+
+  // Insert final score
+  setSum(id, sum) {
+    // Get field by ID
+    const field = document.querySelector(`.${id}+.sum`);
+    // Insert to board
+    field.innerHTML = sum;
+    
   }
 
   displayDiceValues(hand) {
@@ -239,17 +277,7 @@ export default class UI {
     }
   }
 
-  setBonus(id) {
-    document.querySelector(`.${id}+.bonus`).innerHTML = 50;
-  }
 
-  setSum(id, sum) {
-    // Get field by ID
-    const field = document.querySelector(`.${id}+.sum`);
-    // Insert to board
-    field.innerHTML = sum;
-    
-  }
 
 
 }
