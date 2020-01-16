@@ -16,13 +16,13 @@ ui.startGameBtn.addEventListener('click', startGame, {once: true});
 function addPlayer(e) {
   e.preventDefault();
   if (players.length === 9) {
-    ui.sendMessage('Maximum player limit reached!')
+    ui.sendMessage('Maximum player limit reached!', 3000)
     return;
   }
   let name = ui.playerNameInput.value.toUpperCase();
   // Name must have one character
   if (name.length === 0) {
-    ui.sendMessage('Names must have characters')
+    ui.sendMessage('Names must have characters', 3000)
     return;
   }
   // If name overflows, set to 4
@@ -62,7 +62,7 @@ function startGame(e) {
 // Handles a player's turn
 function turnManager() {
   // Message whose turn it is
-  ui.sendMessage(`${this.playerName}'s Turn!`);
+  ui.sendMessage(`${this.playerName}'s Turn!`, 2000);
   // Clear dice
   ui.removeDiceFace();
   ui.clearDiceValues();
@@ -173,13 +173,13 @@ function turnManager() {
             field = e.target.classList[1],
             curPlayer = players[ID.slice(-1)];
       // Click target is available for sacrifice, and is not bonus or sum
-      if (e.target.classList.contains("selected-field") && !e.target.classList.contains("sum") && !e.target.classList.contains("bonus")) {
+      if (e.target.classList.contains("sacrifice-field") && !e.target.classList.contains("sum") && !e.target.classList.contains("bonus")) {
         // Update player gameboard
         this.gameBoard[field] = 0;
         // Update UI
         e.target.innerHTML = 0;
         // Clear field colors
-        ui.removeSelectedFromFields();
+        ui.clearSacrificeFieldOptions();
         // remove event listener
         e.target.parentElement.removeEventListener('click', sacrifice);
         // Pass turn to next player
@@ -352,9 +352,7 @@ function endGame(playerArr) {
     }
   })
   // Declare a winner
-  ui.sendMessage(`The winner is ${winner}, with a total of ${winningSum} points!`);
-
-  // Play again options
+  ui.sendMessage(`The winner is ${winner}, with a total of ${winningSum} points!`, 10000);
 
   // Hide player controls
   ui.hideGameControls();
@@ -369,6 +367,7 @@ function endGame(playerArr) {
 
 }
 
+// Restart game after game over
 function restartGame() {
   // Hide reset field
   ui.hideReset();

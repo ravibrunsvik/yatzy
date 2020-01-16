@@ -91,14 +91,14 @@ export default class UI {
   }
 
   // Display message to user
-  sendMessage(message) {
+  sendMessage(message, time) {
     this.messageBox.innerHTML = message;
     this.messageBox.classList.remove("hidden")
 
     // Clear message after 2s
     setTimeout(() => {
       this.clearMessage()
-    }, 2000)
+    }, time)
   }
   // Clear message
   clearMessage() {
@@ -160,11 +160,20 @@ export default class UI {
   // UI State changes
   sacrificeFieldOptions(id) {
     // Every field except bonus and sum
-    let fieldList = document.querySelectorAll(`.${id}:not(.bonus):not(.sum)`);
+    const fieldList = document.querySelectorAll(`.${id}:not(.bonus):not(.sum)`);
     // Add "Selected" to all fields
     fieldList.forEach(field => field.innerHTML === "" ? 
-    field.classList.add("selected-field") 
+    field.classList.add("sacrifice-field") 
     : '')
+  }
+
+  clearSacrificeFieldOptions() {
+    const fieldList = document.querySelectorAll('.sacrifice-field');
+    
+    fieldList.forEach(field =>{
+        field.classList.remove('sacrifice-field');
+
+      });
   }
 
   // Removes selected hue from player-list
