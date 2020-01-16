@@ -6,6 +6,8 @@
   --dice-selected: rgb(72, 173, 117);
   --box-shadow: 0px 0px 5px 1px #423b3b66;
   --text-color: #000;
+  --list-danger: #a9564c;
+
 }
 
 body {
@@ -148,6 +150,11 @@ background-image: url('../images/three die.png');
 }
 .playerList .selected-field {
   background-color: var(--list-selected);
+  color: yellow;
+}
+
+.playerList .sacrifice-field {
+  background-color: var(--list-danger);
   color: yellow;
 }
 
