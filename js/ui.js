@@ -158,7 +158,7 @@ export default class UI {
   }
 
   // UI State changes
-  sacrificeSpace(id) {
+  sacrificeFieldOptions(id) {
     // Every field except bonus and sum
     let fieldList = document.querySelectorAll(`.${id}:not(.bonus):not(.sum)`);
     // Add "Selected" to all fields
