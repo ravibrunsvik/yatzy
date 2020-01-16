@@ -3,7 +3,6 @@ export default class UI {
     this.mainboard = document.querySelector('.mainBoard')
     this.gameboard = document.querySelector('.gameboard');
     this.playerInsertDiv = document.getElementById("playerInsert");
-    this.playerLists = document.querySelectorAll('.playerList')
     this.diceList = document.querySelector('.diceList');
     this.dice = document.querySelectorAll('.dice')
     this.throwBtn = document.getElementById("throw");
@@ -78,8 +77,9 @@ export default class UI {
 
   // Clear gameboards after game end
   clearAllGameBoards() {
+    const playerLists = document.querySelectorAll('.playerList');
     let IDs = [];
-    this.playerLists.forEach(player => {
+    playerLists.forEach(player => {
       IDs.push(player.id)
     })
 
@@ -188,8 +188,8 @@ export default class UI {
   }
 
   // Insert bonus
-  setBonus(id) {
-    document.querySelector(`.${id}+.bonus`).innerHTML = 50;
+  setBonus(id, value) {
+    document.querySelector(`.${id}+.bonus`).innerHTML = value;
   }
 
   // Insert final score

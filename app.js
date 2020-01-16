@@ -19,7 +19,7 @@ function addPlayer(e) {
     ui.sendMessage('Maximum player limit reached!')
     return;
   }
-  let name = ui.playerNameInput.value;
+  let name = ui.playerNameInput.value.toUpperCase();
   // Name must have one character
   if (name.length === 0) {
     ui.sendMessage('Names must have characters')
@@ -197,7 +197,7 @@ function updateDice(player) {
     if (die.classList.contains("selected")) {
       let i = die.classList[1];
       // Add die to hold
-      player.hold[i] = parseInt(die.innerHTML)
+      player.hold[i] = parseInt(die.innerHTML);
     }
   })
   
@@ -208,9 +208,9 @@ function updateDice(player) {
     hand[die] = player.hold[die];
   }
   // New hand
-  player.hand = hand
+  player.hand = hand;
   // Clear held hand
-  player.clearHeldHand()
+  player.clearHeldHand();
   return hand;
 }
 // Insert value
@@ -227,17 +227,13 @@ function placeValue(e) {
     e.target.parentElement.removeEventListener('click', placeValue)
     // Add value to player's board
     const value = parseInt(e.target.innerHTML)
-    console.log(value);
-    console.log(curPlayer.gameBoard);
     curPlayer.gameBoard[field] = value;
     // Clear selected field color
     ui.removeSelectedFromFields();
     // Remove all temporary values from UI
     ui.removeTempValues(curPlayer.gameBoard, ID);
     // Check for bonus
-    if (checkForBonus(curPlayer.gameBoard, ID)) {
-      ui.setBonus(ID)
-    }
+    checkForBonus(curPlayer.gameBoard, ID);
     // Pass turn to next player
     passTurn(curPlayer);
     
@@ -294,10 +290,9 @@ function checkForBonus(gameboard, id) {
     // add bonus to board
     gameboard.bonus = 50;
     // add bonus to UI
-    ui.setBonus(id)
-    return true;
+    ui.setBonus(id, 50)
   } else {
-    return false
+    return;
   }
 
 }
@@ -336,6 +331,8 @@ function endGame(playerArr) {
       // handle empty bonus
       if (player.gameBoard[entry] === "") {
         player.gameBoard[entry] = 0
+        // Add to UI
+
       }
       // Add sum together
       sum += parseInt(player.gameBoard[entry]);
@@ -361,6 +358,8 @@ function endGame(playerArr) {
 
   // Hide player controls
   ui.hideGameControls();
+  // Hide start game button
+  ui.hideStartBtn();
   // Show player form
   ui.showForm();
   // Show play again button
@@ -373,18 +372,19 @@ function endGame(playerArr) {
 function restartGame() {
   // Hide reset field
   ui.hideReset();
+  // Show start game button
+  ui.showStartBtn();
   // Reset game
   players.forEach(player => {
     // Clear out gameboard
-    player.gameboard = Gameboard.fiveDie();
+    player.gameBoard = Gameboard.fiveDie();
   })
   // Clear fields from UI
   ui.clearAllGameBoards();
-
-  // Bind turn
+  // Bind first turn to first player
   const boundTurn = turnManager.bind(players[0]);
-  // Set event for start game
+  // Set start game events
   ui.startGameBtn.addEventListener('click', boundTurn, {once: true})
-
+  ui.startGameBtn.addEventListener('click', startGame, {once: true})
 
 }
