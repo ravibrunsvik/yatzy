@@ -152,7 +152,7 @@ function turnManager() {
       const length = Object.keys(options).length;
       if (length === 0) {
         // Add sacrifice options to UI
-        ui.sacrificeSpace(ID)
+        ui.sacrificeFieldOptions(ID)
         // No options available, sacrifice a space
         parentElement.addEventListener('click', sacrifice);
       } else {
@@ -181,7 +181,7 @@ function turnManager() {
         // Clear field colors
         ui.removeSelectedFromFields();
         // remove event listener
-        e.target.parentElement.removeEventListener('click', placeValue);
+        e.target.parentElement.removeEventListener('click', sacrifice);
         // Pass turn to next player
         passTurn(curPlayer)
       }
@@ -227,6 +227,8 @@ function placeValue(e) {
     e.target.parentElement.removeEventListener('click', placeValue)
     // Add value to player's board
     const value = parseInt(e.target.innerHTML)
+    console.log(value);
+    console.log(curPlayer.gameBoard);
     curPlayer.gameBoard[field] = value;
     // Clear selected field color
     ui.removeSelectedFromFields();
@@ -285,11 +287,10 @@ function checkForBonus(gameboard, id) {
         three = parseInt(gameboard[3]),
         four = parseInt(gameboard[4]),
         five = parseInt(gameboard[5]),
-        six = parseInt(gameboard[6])
+        six = parseInt(gameboard[6]);
 
   let sum = one + two + three + four + five + six;
-
-  if (gameboard.bonus !== false && sum >= 63) {
+  if (gameboard.bonus !== "" && sum >= 63) {
     // add bonus to board
     gameboard.bonus = 50;
     // add bonus to UI
@@ -298,7 +299,6 @@ function checkForBonus(gameboard, id) {
   } else {
     return false
   }
-  // Update UI to reflect change
 
 }
 // Game over check
