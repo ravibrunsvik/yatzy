@@ -20,9 +20,9 @@ body {
   height: 40px;
   width: var(--board-width);
   background-color: rgb(118, 167, 69);
+  border-radius: var(--border-radius);
   color: white;
   opacity: initial;
-  /* transition-duration: 2s; */
   text-align: center;
   font-size: 20px;
   transition-duration: 0.2s;
