@@ -1,0 +1,25 @@
+{
+  "name": "yatzy",
+  "version": "1.0.0",
+  "description": "9 Player yatzy",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravibrunsvik/yatzy.git"
+  },
+  "keywords": [
+    "yatzy"
+  ],
+  "author": "Ravi Brunsvik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ravibrunsvik/yatzy/issues"
+  },
+  "homepage": "https://github.com/ravibrunsvik/yatzy#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
