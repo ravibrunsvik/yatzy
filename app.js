@@ -17,6 +17,4 @@ app.listen(3000);
 
 console.log("Connected at 3000!");
 
-console.log(__dirname);
-console.log(__dirname + "/public");
 module.exports = app;
