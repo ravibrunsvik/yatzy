@@ -7,7 +7,7 @@ app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 
 // Middleware
-app.use(express.static(__dirname + "/public"));
+app.use("/yatzy", express.static(__dirname + "/public"));
 
 // routes
 const indexRouter = require(path.join(__dirname, "/routes/index"));
