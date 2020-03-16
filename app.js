@@ -1,13 +1,18 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 
-// Static files
-app.use(express.static(__dirname + "/client"));
+// view engine
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views");
+
+// Middleware
+app.use(express.static(__dirname + "/public"));
 
 // routes
-const indexRouter = require(__dirname + "/routes/index");
+const indexRouter = require(path.join(__dirname, "/routes/index"));
 app.use("/", indexRouter);
-// Fire server
+// Fire up server
 app.listen(3000);
 
 console.log("Connected at 3000!");
