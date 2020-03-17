@@ -1,5 +1,4 @@
 export default class Conditionals {
-
   // Check current hand
   currentHand(hand) {
     let resultHand = {
@@ -8,17 +7,17 @@ export default class Conditionals {
       3: 0,
       4: 0,
       5: 0,
-      6: 0
-    }
+      6: 0,
+    };
     // Add dice to hand
     for (let die in hand) {
       // Add each die to a total
-      resultHand[hand[die]] += 1
+      resultHand[hand[die]] += 1;
     }
     return resultHand;
   }
   dieAmount(hand, gameboard, number) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
     let counter = 0;
     // If gameboard already has value, return
     if (gameboard[number] !== "") {
@@ -27,7 +26,7 @@ export default class Conditionals {
     // If value exists, add to counter
     for (let die in handCopy) {
       if (parseInt(die) === number && handCopy[die] > 0) {
-        counter = die * handCopy[die]
+        counter = die * handCopy[die];
       }
     }
     // Return false if no value
@@ -42,32 +41,32 @@ export default class Conditionals {
 
   // One pair
   onePair(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
     if (gameboard.onePair !== "") {
-      return false
+      return false;
     }
     // eliminate less than 2s
     for (let die in handCopy) {
       // If less than two, remove
       if (handCopy[die] < 2) {
-        delete handCopy[die]
+        delete handCopy[die];
       }
     }
     // Find largest
     let counter = 0;
     for (let die in handCopy) {
-      if (die > counter) {
-        counter = die * 2
+      if (die * 2 > counter) {
+        counter = die * 2;
       }
     }
     if (counter === 0) {
-      return false
+      return false;
     }
-      return parseInt(counter);
+    return parseInt(counter);
   }
   // Two pairs
   twoPairs(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
     let amountOfPairs = 0;
 
     if (gameboard.twoPair !== "") {
@@ -76,29 +75,27 @@ export default class Conditionals {
     let counter = 0;
     for (let die in handCopy) {
       if (handCopy[die] >= 2) {
-        counter += die * 2
-        amountOfPairs++
+        counter += die * 2;
+        amountOfPairs++;
       }
     }
     if (counter === 0 || amountOfPairs < 2) {
       return false;
     }
-      return counter;
-    
+    return counter;
   }
-  
-  
+
   // Three of a kind
   threeOfAKind(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
 
     if (gameboard.threeKind !== "") {
-      return false
+      return false;
     }
     let counter = 0;
     for (let die in handCopy) {
       if (handCopy[die] >= 3) {
-        counter += die * 3
+        counter += die * 3;
       }
     }
     if (counter === 0) {
@@ -108,7 +105,7 @@ export default class Conditionals {
   }
   // Four of a kind
   fourOfAKind(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
 
     if (gameboard.fourKind !== "") {
       return false;
@@ -116,7 +113,7 @@ export default class Conditionals {
     let counter = 0;
     for (let die in handCopy) {
       if (handCopy[die] >= 4) {
-        counter += die * 4
+        counter += die * 4;
       }
     }
     if (counter === 0) {
@@ -126,7 +123,7 @@ export default class Conditionals {
   }
   // Yatzy
   yatzy(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
 
     if (gameboard.yatzy !== "") {
       return false;
@@ -134,17 +131,17 @@ export default class Conditionals {
     let counter = 0;
     for (let die in handCopy) {
       if (handCopy[die] >= 5) {
-        counter += die * 5
+        counter += die * 5;
       }
     }
     if (counter === 0) {
-      return false
+      return false;
     }
     return counter + 50;
   }
   // House
   house(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
 
     if (gameboard.house !== "") {
       return false;
@@ -156,12 +153,12 @@ export default class Conditionals {
     for (let die in handCopy) {
       // Check for dice with amount = 3
       if (handCopy[die] === 3) {
-        counter += die * 3
+        counter += die * 3;
         threeCount = true;
       }
       // Check for dice with amount = 2
       if (handCopy[die] === 2) {
-        counter += die * 2
+        counter += die * 2;
         twoCount = true;
       }
     }
@@ -176,7 +173,7 @@ export default class Conditionals {
 
   // Tiny Straight
   tinyStraight(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
 
     if (gameboard.tinyStraight !== "") {
       return false;
@@ -185,18 +182,17 @@ export default class Conditionals {
     const twoCheck = handCopy[2] === 1;
     const threeCheck = handCopy[3] === 1;
     const fourCheck = handCopy[4] === 1;
-    const fiveCheck = handCopy[5] === 1
+    const fiveCheck = handCopy[5] === 1;
 
     if (oneCheck && twoCheck && threeCheck && fourCheck && fiveCheck) {
       return 15;
     } else {
       return false;
     }
-    
   }
   // Large Straight
   bigStraight(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
 
     if (gameboard.bigStraight !== "") {
       return false;
@@ -204,8 +200,8 @@ export default class Conditionals {
     const twoCheck = handCopy[2] === 1;
     const threeCheck = handCopy[3] === 1;
     const fourCheck = handCopy[4] === 1;
-    const fiveCheck = handCopy[5] === 1
-    const sixCheck = handCopy[6] === 1
+    const fiveCheck = handCopy[5] === 1;
+    const sixCheck = handCopy[6] === 1;
 
     if (twoCheck && threeCheck && fourCheck && fiveCheck && sixCheck) {
       return 20;
@@ -215,18 +211,18 @@ export default class Conditionals {
   }
   // Chance
   chance(hand, gameboard) {
-    let handCopy = JSON.parse(JSON.stringify(hand))
+    let handCopy = JSON.parse(JSON.stringify(hand));
 
     if (gameboard.chance !== "") {
       return false;
-    } 
-    // Return 
+    }
+    // Return
     let counter = 0;
     // Add dice together
     for (let die in handCopy) {
       if (handCopy[die] > 0) {
         // Die * amount
-        counter += parseInt(die) * parseInt(handCopy[die])
+        counter += parseInt(die) * parseInt(handCopy[die]);
       }
     }
     return counter;
@@ -250,15 +246,14 @@ export default class Conditionals {
       bigStraight: this.bigStraight(hand, gameboard),
       house: this.house(hand, gameboard),
       chance: this.chance(hand, gameboard),
-      yatzy: this.yatzy(hand, gameboard)
-    }
+      yatzy: this.yatzy(hand, gameboard),
+    };
     // Remove false options
     for (let entry in object) {
       if (object[entry] === false) {
-        delete object[entry]
+        delete object[entry];
       }
     }
     return object;
-  } 
-
+  }
 }

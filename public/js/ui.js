@@ -1,19 +1,26 @@
 export default class UI {
   constructor() {
-    this.mainboard = document.querySelector('.mainBoard')
-    this.gameboard = document.querySelector('.gameboard');
+    this.mainboard = document.querySelector(".mainBoard");
+    this.gameboard = document.querySelector(".gameboard");
     this.playerInsertDiv = document.getElementById("playerInsert");
-    this.diceList = document.querySelector('.diceList');
-    this.dice = document.querySelectorAll('.dice')
+    this.diceList = document.querySelector(".diceList");
+    this.dice = document.querySelectorAll(".dice");
     this.throwBtn = document.getElementById("throw");
     this.endTurnBtn = document.getElementById("endTurn");
     this.submitPlayerBtn = document.getElementById("submit");
     this.startGameBtn = document.getElementById("start");
     this.playerNameInput = document.getElementById("name");
-    this.messageBox = document.querySelector('.message-box');
-    this.diceClassNames = ['one-face', 'two-face', 'three-face', 'four-face', 'five-face', 'six-face'];
-    this.playerForm = document.querySelector('#playerform');
-    this.playAgainBtn = document.querySelector('#reset');
+    this.messageBox = document.querySelector(".message-box");
+    this.diceClassNames = [
+      "one-face",
+      "two-face",
+      "three-face",
+      "four-face",
+      "five-face",
+      "six-face",
+    ];
+    this.playerForm = document.querySelector("#playerform");
+    this.playAgainBtn = document.querySelector("#reset");
   }
 
   // Insert players in board
@@ -59,8 +66,8 @@ export default class UI {
 
   // Clear up UI after option is selected
   removeSelectedFromFields() {
-    let fieldsToClear = document.querySelectorAll('.selected-field');
-    fieldsToClear.forEach(field => field.classList.remove("selected-field"))
+    let fieldsToClear = document.querySelectorAll(".selected-field");
+    fieldsToClear.forEach(field => field.classList.remove("selected-field"));
   }
   // Remove values from all temp fields
   removeTempValues(gameboard, id) {
@@ -68,54 +75,53 @@ export default class UI {
     for (let entry in gameboard) {
       if (gameboard[entry] === "") {
         // Value was placeholder, remove it
-        let field = document.querySelector(`[class="${id} ${entry}"]`)
-        field.innerHTML = ""
+        let field = document.querySelector(`[class="${id} ${entry}"]`);
+        field.innerHTML = "";
       }
-
     }
   }
 
   // Clear gameboards after game end
   clearAllGameBoards() {
-    const playerLists = document.querySelectorAll('.playerList');
+    const playerLists = document.querySelectorAll(".playerList");
     let IDs = [];
     playerLists.forEach(player => {
-      IDs.push(player.id)
-    })
+      IDs.push(player.id);
+    });
 
     IDs.forEach(id => {
       document.querySelectorAll(`.${id}`).forEach(element => {
         element.innerHTML = "";
-      })
-    })
+      });
+    });
   }
 
   // Display message to user
   sendMessage(message, time) {
     this.messageBox.innerHTML = message;
-    this.messageBox.classList.remove("hidden")
+    this.messageBox.classList.remove("hidden");
 
     // Clear message after 2s
     setTimeout(() => {
-      this.clearMessage()
-    }, time)
+      this.clearMessage();
+    }, time);
   }
   // Clear message
   clearMessage() {
-    this.messageBox.classList.add("hidden")
+    this.messageBox.classList.add("hidden");
   }
 
   // Display functions
   // Display in-game buttons
   showGameControls() {
-    this.throwBtn.classList.remove("hidden")
-    this.endTurnBtn.classList.remove("hidden")
-    this.diceList.classList.remove("hidden")
+    this.throwBtn.classList.remove("hidden");
+    this.endTurnBtn.classList.remove("hidden");
+    this.diceList.classList.remove("hidden");
   }
 
   hideGameControls() {
-    this.throwBtn.classList.add("hidden")
-    this.endTurnBtn.classList.add("hidden")
+    this.throwBtn.classList.add("hidden");
+    this.endTurnBtn.classList.add("hidden");
     this.diceList.classList.add("hidden");
   }
 
@@ -131,7 +137,7 @@ export default class UI {
   // Show Gameboard
   showGameBoard() {
     // this.mainboard.style = "";
-    this.mainboard.classList.remove("hidden")
+    this.mainboard.classList.remove("hidden");
   }
 
   // Hide the gameboard
@@ -145,7 +151,7 @@ export default class UI {
   }
 
   showForm() {
-    this.playerForm.classList.remove("no-display")
+    this.playerForm.classList.remove("no-display");
   }
 
   showReset() {
@@ -154,7 +160,7 @@ export default class UI {
 
   hideReset() {
     if (!this.playAgainBtn.classList.contains("hidden"))
-    this.playAgainBtn.classList.add("hidden");
+      this.playAgainBtn.classList.add("hidden");
   }
 
   // UI State changes
@@ -162,23 +168,22 @@ export default class UI {
     // Every field except bonus and sum
     const fieldList = document.querySelectorAll(`.${id}:not(.bonus):not(.sum)`);
     // Add "Selected" to all fields
-    fieldList.forEach(field => field.innerHTML === "" ? 
-    field.classList.add("sacrifice-field") 
-    : '')
+    fieldList.forEach(field =>
+      field.innerHTML === "" ? field.classList.add("sacrifice-field") : ""
+    );
   }
 
   clearSacrificeFieldOptions() {
-    const fieldList = document.querySelectorAll('.sacrifice-field');
-    
-    fieldList.forEach(field =>{
-        field.classList.remove('sacrifice-field');
+    const fieldList = document.querySelectorAll(".sacrifice-field");
 
-      });
+    fieldList.forEach(field => {
+      field.classList.remove("sacrifice-field");
+    });
   }
 
   // Removes selected hue from player-list
   clearSelected() {
-    const selectedItems = document.querySelectorAll('.selected')
+    const selectedItems = document.querySelectorAll(".selected");
 
     selectedItems.forEach(item => item.classList.remove("selected"));
   }
@@ -193,7 +198,7 @@ export default class UI {
         // insert value to field
         item.innerHTML = option;
       }
-    })
+    });
   }
 
   // Insert bonus
@@ -207,7 +212,6 @@ export default class UI {
     const field = document.querySelector(`.${id}+.sum`);
     // Insert to board
     field.innerHTML = sum;
-    
   }
 
   displayDiceValues(hand) {
@@ -221,7 +225,7 @@ export default class UI {
           die.innerHTML = hand[dice];
         }
       }
-    })
+    });
   }
 
   // Set dice selected
@@ -229,55 +233,69 @@ export default class UI {
     if (e.target.classList.contains("dice")) {
       if (!e.target.classList.contains("selected")) {
         e.target.classList.add("selected");
-      } else e.target.classList.remove("selected")
+      } else e.target.classList.remove("selected");
     }
   }
 
   diceHold() {
-    this.diceList.addEventListener('click', this.setAsideDice)
+    this.diceList.addEventListener("click", this.setAsideDice);
   }
 
-    // Assign dice icons
+  // Assign dice icons
   setDiceFace() {
-    const dice = this.dice,
-          classNames = this.diceClassNames;
-      // Assign correct dice face
-      for (let die of dice) {
-        // classNames.forEach(className => die.classList.contains(className) ? die.classList.remove(className) : '')
-  
-          switch (die.innerHTML) {
-            case '1':
-              die.classList.add("one-face");
-              break;
-            case '2':
-              die.classList.add('two-face');
-              break;
-            case '3':
-              die.classList.add('three-face');
-              break;
-            case '4':
-              die.classList.add('four-face');
-              break;
-            case '5':
-              die.classList.add('five-face');
-              break;
-            case '6':
-              die.classList.add('six-face');
-              break;
-            default:
-              break;
-          }
-        }
+    const dice = this.dice;
+    // Assign correct dice face
+    for (let die of dice) {
+      switch (die.innerHTML) {
+        case "1":
+          die.classList.add("one-face");
+          break;
+        case "2":
+          die.classList.add("two-face");
+          break;
+        case "3":
+          die.classList.add("three-face");
+          break;
+        case "4":
+          die.classList.add("four-face");
+          break;
+        case "5":
+          die.classList.add("five-face");
+          break;
+        case "6":
+          die.classList.add("six-face");
+          break;
+        default:
+          break;
+      }
     }
-  
+  }
+
   removeDiceFace() {
     const dice = this.dice,
-          classNames = this.diceClassNames;
+      classNames = this.diceClassNames;
 
-          // Remove all dice class names
-          for (let die of dice) {
-            classNames.forEach(className => die.classList.contains(className) ? die.classList.remove(className) : '')
-          }
+    // Remove all dice class names
+    for (let die of dice) {
+      classNames.forEach(className => {
+        die.classList.contains(className)
+          ? die.classList.remove(className)
+          : "";
+      });
+    }
+  }
+
+  triggerAnimation(timeout) {
+    const dice = this.dice;
+
+    for (let die of dice) {
+      if (!die.classList.contains("selected")) {
+        die.classList.add("animated");
+        setTimeout(() => {
+          die.classList.remove("animated");
+        }, timeout);
+      }
+    }
   }
 
   clearDiceValues() {
@@ -285,8 +303,4 @@ export default class UI {
       die.innerHTML = "";
     }
   }
-
-
-
-
 }

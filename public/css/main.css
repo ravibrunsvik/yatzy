@@ -1,19 +1,18 @@
 :root {
   --list-selected: rgba(80, 129, 140, 0.68);
-  --board-width: 500px;
+  --board-width: 80vw;
   --border-radius: 8px;
   --background-color: rgb(113, 113, 113);
   --dice-selected: rgb(72, 173, 117);
   --box-shadow: 0px 0px 5px 1px #423b3b66;
   --text-color: #000;
   --list-danger: #a9564c;
-
 }
 
 body {
   background: var(--background-color);
   user-select: none;
-  color: var(--text-color)
+  color: var(--text-color);
 }
 
 .message-box {
@@ -39,27 +38,25 @@ body {
 }
 
 .mainBoard {
-  /* background-color: gray; */
   width: var(--board-width);
   position: relative;
 }
 
-
 li {
   list-style-type: none;
-  width:45px;
+  width: 45px;
   height: 30px;
   font-weight: bold;
 }
 
-.itemlist li:first-child, .playerlist li:first-child {
+.itemlist li:first-child,
+.playerlist li:first-child {
   border: 2px solid white;
 }
 
 .itemList li {
-  width: 112px;  
+  width: 112px;
   padding: 0 5px;
-
 }
 
 .playerList li {
@@ -67,7 +64,8 @@ li {
   text-transform: uppercase;
 }
 
-.playerList li, .itemList li {
+.playerList li,
+.itemList li {
   list-style-type: none;
   /* background: rgb(155, 155, 155); */
   margin: 0px;
@@ -92,16 +90,29 @@ li {
 }
 
 .itemList li:last-child {
-  border-bottom-left-radius: var(--border-radius)
+  border-bottom-left-radius: var(--border-radius);
 }
 
 .dice {
   height: 40px;
   width: 40px;
   background: white;
+  text-indent: -9999px;
+  overflow: hidden;
   border-radius: 6px;
   box-shadow: var(--box-shadow);
+  transition: 0.2s;
+}
 
+.dice:hover {
+  background-color: #679ae7;
+  transition: 0.3s;
+}
+
+.dice:active {
+  background-color: #0059dd;
+  box-shadow: 0 0 5px rgb(95, 111, 165);
+  transition: 0.1s;
 }
 
 .dot {
@@ -114,40 +125,50 @@ li {
 }
 
 .one-face {
-  background-image: url('../images/one die.png')
+  background-image: url("../images/one die.png");
 }
 
 .two-face {
-background-image: url('../images/two die.png');
+  background-image: url("../images/two die.png");
 }
 
 .three-face {
-background-image: url('../images/three die.png');
+  background-image: url("../images/three die.png");
 }
 
 .four-face {
-  background-image: url('../images/four die.png');
+  background-image: url("../images/four die.png");
 }
 
 .five-face {
-  background-image: url('../images/five die.png');
+  background-image: url("../images/five die.png");
 }
 
 .six-face {
-  background-image: url('../images/six die.png'); 
+  background-image: url("../images/six die.png");
 }
 
-.one-face, .two-face, .three-face, .four-face, .five-face, .six-face {
+.one-face,
+.two-face,
+.three-face,
+.four-face,
+.five-face,
+.six-face {
   height: 40px;
   background-size: cover;
   background-position: center;
   text-indent: -9999px;
   overflow: hidden;
 }
+.dice.animated {
+  animation: fadeout 0.15s linear 0s 2 alternate;
+}
 
 .selected {
-  background-color: var(--dice-selected)
+  /* animation: shimmer 0.5s ease-in-out 0s 2 alternate; */
+  background-color: #337ff0;
 }
+
 .playerList .selected-field {
   background-color: var(--list-selected);
   color: yellow;
@@ -170,10 +191,31 @@ background-image: url('../images/three die.png');
 
 .grid {
   display: grid;
-  grid-template-columns: auto auto auto auto
+  grid-template-columns: auto auto auto auto;
 }
 
 .flex-container {
   display: flex;
   flex-direction: column;
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0, 0);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    box-shadow: 0 0 0 gray;
+  }
+
+  to {
+    box-shadow: 0px 0px 8px #fefe62;
+  }
 }

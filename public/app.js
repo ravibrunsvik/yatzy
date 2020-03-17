@@ -83,6 +83,7 @@ function turnManager() {
     this.hand = hand;
     // Update UI with dice
     ui.displayDiceValues(hand);
+    ui.triggerAnimation(400);
     // Set dice image
     ui.setDiceFace();
     // Add hold dice event listeners
@@ -99,6 +100,7 @@ function turnManager() {
     let hand = updateDice(this);
     // Update ui
     ui.displayDiceValues(hand);
+    ui.triggerAnimation(400);
     // Remove old dice face
     ui.removeDiceFace();
     // Set dice image
@@ -114,6 +116,7 @@ function turnManager() {
     let hand = updateDice(this);
     // Update ui
     ui.displayDiceValues(hand);
+    ui.triggerAnimation(400);
     // Remove old dice face
     ui.removeDiceFace();
     // Set dice image
@@ -343,10 +346,12 @@ function endGame(playerArr) {
     }
   });
   // Declare a winner
-  ui.sendMessage(
-    `The winner is ${winner}, with a total of ${winningSum} points!`,
-    10000
-  );
+  playerArr.length === 1
+    ? ui.sendMessage(`Your final score is ${winningSum}!`, 10000)
+    : ui.sendMessage(
+        `The winner is ${winner}, with a total of ${winningSum} points!`,
+        10000
+      );
 
   // Hide player controls
   ui.hideGameControls();
