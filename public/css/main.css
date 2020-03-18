@@ -2,29 +2,42 @@
   --list-selected: rgba(80, 129, 140, 0.68);
   --board-width: 80vw;
   --border-radius: 8px;
-  --background-color: rgb(113, 113, 113);
+  --background-color: rgb(53, 96, 120);
   --dice-selected: rgb(72, 173, 117);
   --box-shadow: 0px 0px 5px 1px #423b3b66;
-  --text-color: #000;
+  --text-color: #e2e2e2;
   --list-danger: #a9564c;
 }
 
 body {
   background: var(--background-color);
   user-select: none;
+}
+
+label {
+  color: var(--text-color);
+}
+#playerform {
+  width: var(--board-width);
+}
+
+#header {
   color: var(--text-color);
 }
 
 .message-box {
   height: 40px;
   width: var(--board-width);
-  background-color: rgb(118, 167, 69);
+  /* background-color: rgb(118, 167, 69); */
+  background-color: rgb(71, 154, 182);
+  /* padding-top: 5px; */
   border-radius: var(--border-radius);
   color: white;
   opacity: initial;
   text-align: center;
   font-size: 20px;
   transition-duration: 0.2s;
+  margin: 5px 0;
 }
 
 .hidden {
