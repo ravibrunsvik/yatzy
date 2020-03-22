@@ -21,12 +21,17 @@ label {
   width: var(--board-width);
 }
 
+#playerform input[type="button"],
+#playerform input[type="submit"] {
+  margin: 5px 5px 0 0;
+}
+
 #header {
   color: var(--text-color);
 }
 
 .message-box {
-  height: 40px;
+  /* height: 30px; */
   width: var(--board-width);
   /* background-color: rgb(118, 167, 69); */
   background-color: rgb(71, 154, 182);
@@ -35,7 +40,7 @@ label {
   color: white;
   opacity: initial;
   text-align: center;
-  font-size: 20px;
+  font-size: 15px;
   transition-duration: 0.2s;
   margin: 5px 0;
 }
@@ -58,7 +63,7 @@ label {
 li {
   list-style-type: none;
   width: 45px;
-  height: 30px;
+  height: 25px;
   font-weight: bold;
 }
 
@@ -68,7 +73,7 @@ li {
 }
 
 .itemList li {
-  width: 112px;
+  width: 95px;
   padding: 0 5px;
 }
 
@@ -95,7 +100,10 @@ li {
 }
 
 .diceList {
-  display: inline-block;
+  display: flex;
+  justify-content: space-around;
+  justify-self: center;
+  margin: 0;
 }
 
 .itemList li:first-child {
@@ -107,6 +115,7 @@ li {
 }
 
 .dice {
+  margin: 0 5px 10px;
   height: 40px;
   width: 40px;
   background: white;
@@ -193,7 +202,9 @@ li {
 }
 
 .output {
-  padding: 5px 0 0 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .flex {
@@ -202,14 +213,35 @@ li {
   justify-items: center;
 }
 
+/* .flex-container {
+  display: flex;
+  flex-direction: row;
+} */
+
+.flex.no-display,
+.diceList.no-display {
+  display: none;
+}
+
 .grid {
   display: grid;
   grid-template-columns: auto auto auto auto;
 }
+.button-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
-.flex-container {
+.button-footer button {
+  margin: 5px 5px;
+  width: 40%;
+}
+
+.flex-col {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 @keyframes fadeout {

@@ -1,38 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Yatzy.</title>
-
-  <link rel="stylesheet" type="text/css" href="/yatzy/css/normalize.css">
-  <link rel="stylesheet" type="text/css" href="/yatzy/css/skeleton.css">
-  <link rel="stylesheet" type="text/css" href="/yatzy/css/main.css">
-</head>
-<body>
-  <div class="container">
-    <h1 id="header">Yatzy.</h1>
-    <div class="message-box hidden">
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Yatzy.</title>
+    <link rel="stylesheet" type="text/css" href="/yatzy/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/yatzy/css/skeleton.css" />
+    <link rel="stylesheet" type="text/css" href="/yatzy/css/main.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 id="header">Yatzy.</h1>
+      <div class="message-box hidden"></div>
       <div class="row">
         <div class="flex">
           <form id="playerform">
             <label for="name">Choose name</label>
-            <input type="text" name="name" id="name" placeholder="Enter initials" value="">
-            <input type="submit" value="Add player" class="" id="submit">
-            <input type="button" value="Start game" class="button-primary hidden" id="start">
-            <input type="button" value="Play again" class="button-primary hidden" id="reset">
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Enter initials"
+              value=""
+            />
+            <div class="buttons flex-container">
+              <input type="submit" value="Add player" class="" id="submit" />
+              <input
+                type="button"
+                value="Start game"
+                class="button-primary no-display"
+                id="start"
+              />
+              <input
+                type="button"
+                value="Play again"
+                class="button-primary no-display"
+                id="reset"
+              />
+            </div>
           </form>
-        
         </div>
-          
       </div>
-      <div class="flex mainBoard hidden">
-
+      <div class="flex mainBoard no-display">
         <div class="gameboard" id="gameboard">
           <div class="itemNames">
-            
             <ul class="itemList">
               <li>#</li>
               <li>Ones</li>
@@ -55,23 +67,26 @@
             </ul>
           </div>
         </div>
-          <div class="playerNames flex" id="playerInsert">
-          </div>
-      <div class="output flex-container"> 
-        <ul class="diceList hidden">
-          <li class="dice 1"></li>
-          <li class="dice 2"></li>
-          <li class="dice 3"></li>
-          <li class="dice 4"></li>
-          <li class="dice 5"></li>
-        </ul>
-        <div class="flex-container buttons">
-    
-          <button id="throw" class="button-primary hidden">Throw</button>
-          <button id="endTurn" class="hidden">End turn</button>
+        <div class="playerNames flex" id="playerInsert"></div>
+      </div>
+
+      <div class="footer">
+        <div class="output flex-container">
+          <ul class="diceList no-display">
+            <li class="dice 1"></li>
+            <li class="dice 2"></li>
+            <li class="dice 3"></li>
+            <li class="dice 4"></li>
+            <li class="dice 5"></li>
+          </ul>
+        </div>
+        <div class="button-footer buttons">
+          <button id="throw" class="button-primary no-display">Throw</button>
+          <button id="endTurn" class="no-display">End turn</button>
         </div>
       </div>
     </div>
-  <script src="/yatzy/app.js" type="module"></script>
-</body>
+
+    <script src="/yatzy/app.js" type="module"></script>
+  </body>
 </html>

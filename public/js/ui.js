@@ -1,5 +1,6 @@
 export default class UI {
   constructor() {
+    this.header = document.querySelector("#header");
     this.mainboard = document.querySelector(".mainBoard");
     this.gameboard = document.querySelector(".gameboard");
     this.playerInsertDiv = document.getElementById("playerInsert");
@@ -113,37 +114,45 @@ export default class UI {
 
   // Display functions
   // Display in-game buttons
+
+  hideHeader() {
+    this.header.classList.add("no-display");
+  }
+
+  showHeader() {
+    this.header.classList.remove("no-display");
+  }
+
   showGameControls() {
-    this.throwBtn.classList.remove("hidden");
-    this.endTurnBtn.classList.remove("hidden");
-    this.diceList.classList.remove("hidden");
+    this.throwBtn.classList.remove("no-display");
+    this.endTurnBtn.classList.remove("no-display");
+    this.diceList.classList.remove("no-display");
   }
 
   hideGameControls() {
-    this.throwBtn.classList.add("hidden");
-    this.endTurnBtn.classList.add("hidden");
-    this.diceList.classList.add("hidden");
+    this.throwBtn.classList.add("no-display");
+    this.endTurnBtn.classList.add("no-display");
+    this.diceList.classList.add("no-display");
   }
 
   // Show 'start game' button
   showStartBtn() {
     // this.startGameBtn.style = "";
-    this.startGameBtn.classList.remove("hidden");
+    this.startGameBtn.classList.remove("no-display");
   }
   // Hide 'start game' button
   hideStartBtn() {
-    this.startGameBtn.classList.add("hidden");
+    this.startGameBtn.classList.add("no-display");
   }
   // Show Gameboard
   showGameBoard() {
     // this.mainboard.style = "";
-    this.mainboard.classList.remove("hidden");
+    this.mainboard.classList.remove("no-display");
   }
 
   // Hide the gameboard
   hideGameBoard() {
-    // this.mainboard.style = "display: hidden;"
-    this.mainboard.classList.add("hidden");
+    this.mainboard.classList.add("no-display");
   }
 
   hideForm() {
@@ -155,12 +164,12 @@ export default class UI {
   }
 
   showReset() {
-    this.playAgainBtn.classList.remove("hidden");
+    this.playAgainBtn.classList.remove("no-display");
   }
 
   hideReset() {
-    if (!this.playAgainBtn.classList.contains("hidden"))
-      this.playAgainBtn.classList.add("hidden");
+    if (!this.playAgainBtn.classList.contains("no-display"))
+      this.playAgainBtn.classList.add("no-display");
   }
 
   // UI State changes

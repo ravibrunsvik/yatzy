@@ -10,7 +10,7 @@ let players = [];
 // Add players to the game
 function addPlayer(e) {
   e.preventDefault();
-  if (players.length === 9) {
+  if (players.length === 4) {
     ui.sendMessage("Maximum player limit reached!", 3000);
     return;
   }
@@ -46,6 +46,8 @@ function addPlayer(e) {
 // Runs once when game starts
 function startGame(e) {
   e.preventDefault();
+  // Hide header
+  ui.hideHeader();
   // Hide play again button
   ui.hideReset();
   // Hide player entry form
@@ -361,6 +363,8 @@ function endGame(playerArr) {
   ui.showForm();
   // Show play again button
   ui.showReset();
+  // Show header
+  ui.showHeader();
   // Play again event listener
   ui.playAgainBtn.addEventListener("click", restartGame, { once: true });
 }
