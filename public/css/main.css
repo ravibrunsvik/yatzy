@@ -32,7 +32,7 @@ label {
 
 .message-box {
   /* height: 30px; */
-  width: var(--board-width);
+  /* width: var(--board-width); */
   /* background-color: rgb(118, 167, 69); */
   background-color: rgb(71, 154, 182);
   /* padding-top: 5px; */
@@ -40,9 +40,9 @@ label {
   color: white;
   opacity: initial;
   text-align: center;
-  font-size: 15px;
+  /* font-size: 15px; */
   transition-duration: 0.2s;
-  margin: 5px 0;
+  margin: 0.5vh 0;
 }
 
 .hidden {
@@ -62,8 +62,8 @@ label {
 
 li {
   list-style-type: none;
-  width: 45px;
-  height: 25px;
+  width: 10vw;
+  height: 4vh;
   font-weight: bold;
 }
 
@@ -73,7 +73,7 @@ li {
 }
 
 .itemList li {
-  width: 95px;
+  width: 30vw;
   padding: 0 5px;
 }
 
@@ -115,9 +115,9 @@ li {
 }
 
 .dice {
-  margin: 0 5px 10px;
-  height: 40px;
-  width: 40px;
+  margin: 0 1vw 1vh;
+  height: 6vh;
+  width: 6vh;
   background: white;
   text-indent: -9999px;
   overflow: hidden;
@@ -176,7 +176,7 @@ li {
 .four-face,
 .five-face,
 .six-face {
-  height: 40px;
+  /* height: 40px; */
   background-size: cover;
   background-position: center;
   text-indent: -9999px;
@@ -187,7 +187,6 @@ li {
 }
 
 .selected {
-  /* animation: shimmer 0.5s ease-in-out 0s 2 alternate; */
   background-color: #337ff0;
 }
 
@@ -212,11 +211,6 @@ li {
   flex-direction: row;
   justify-items: center;
 }
-
-/* .flex-container {
-  display: flex;
-  flex-direction: row;
-} */
 
 .flex.no-display,
 .diceList.no-display {
@@ -262,5 +256,37 @@ li {
 
   to {
     box-shadow: 0px 0px 8px #fefe62;
+  }
+}
+
+@media screen and (min-width: 468px) {
+  .footer {
+    width: 80%;
+    margin: auto;
+  }
+
+  .flex {
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .footer {
+    width: 60%;
+    margin: auto;
+  }
+
+  .flex {
+    justify-content: center;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  body {
+    font-size: 20px;
+  }
+
+  .mainBoard {
+    margin: 10px;
   }
 }

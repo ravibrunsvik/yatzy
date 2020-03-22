@@ -29,7 +29,7 @@
 .container {
   position: relative;
   width: 100%;
-  max-width: 960px;
+  /* max-width: 960px; */
   margin: 0 auto;
   padding: 0 20px;
   box-sizing: border-box;
@@ -277,13 +277,13 @@ input[type="submit"],
 input[type="reset"],
 input[type="button"] {
   /* display: inline-block; */
-  height: 38px;
+  height: 4.5vh;
   padding: 0 15px;
   color: #fff;
   text-align: center;
   font-size: 11px;
   font-weight: 600;
-  line-height: 38px;
+  line-height: 4.5vh;
   letter-spacing: 0.1rem;
   text-transform: uppercase;
   text-decoration: none;
@@ -345,7 +345,7 @@ input[type="url"],
 input[type="password"],
 textarea,
 select {
-  height: 38px;
+  height: 4.5vh;
   padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
   background-color: #fff;
   border: 1px solid #d1d1d1;
@@ -479,12 +479,14 @@ dl,
 figure,
 table,
 p,
-ul,
-ol,
-form {
+/* ul, */
+ol {
   margin-bottom: 2.5rem;
 }
 
+form {
+  margin-bottom: 0.5rem;
+}
 /* Utilities
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .u-full-width {
