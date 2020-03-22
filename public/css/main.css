@@ -259,6 +259,7 @@ li {
   }
 }
 
+/* Phones */
 @media screen and (min-width: 468px) {
   .footer {
     width: 80%;
@@ -270,7 +271,11 @@ li {
   }
 }
 
-@media screen and (min-width: 760px) {
+/* Tablets */
+@media screen and (min-width: 760px) and (max-width: 1024px) {
+  body {
+    font-size: 20px;
+  }
   .footer {
     width: 60%;
     margin: auto;
@@ -279,11 +284,24 @@ li {
   .flex {
     justify-content: center;
   }
+
+  .mainBoard {
+    margin: 10px;
+  }
 }
 
-@media screen and (min-width: 1024px) {
+/* Desktop */
+@media only screen and (min-width: 1080px) {
   body {
     font-size: 20px;
+  }
+
+  li {
+    width: 5vw;
+  }
+
+  .itemList li {
+    width: 20vw;
   }
 
   .mainBoard {
