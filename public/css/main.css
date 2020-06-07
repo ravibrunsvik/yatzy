@@ -31,16 +31,11 @@ label {
 }
 
 .message-box {
-  /* height: 30px; */
-  /* width: var(--board-width); */
-  /* background-color: rgb(118, 167, 69); */
   background-color: rgb(71, 154, 182);
-  /* padding-top: 5px; */
   border-radius: var(--border-radius);
   color: white;
   opacity: initial;
   text-align: center;
-  /* font-size: 15px; */
   transition-duration: 0.2s;
   margin: 0.5vh 0;
 }
@@ -126,10 +121,7 @@ li {
   transition: 0.2s;
 }
 
-.dice:hover {
-  background-color: #679ae7;
-  transition: 0.3s;
-}
+
 
 .dice:active {
   background-color: #0059dd;
@@ -306,5 +298,10 @@ li {
 
   .mainBoard {
     margin: 10px;
+  }
+
+  .dice:hover {
+    background-color: #679ae7;
+    transition: 0.3s;
   }
 }
